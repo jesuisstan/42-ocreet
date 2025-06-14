@@ -46,19 +46,21 @@ Make sure you have the following installed on a Linux-based system:
 ```bash
 sudo apt install ocaml opam git m4 bubblewrap pkg-config \\
     libev-dev libssl-dev libsqlite3-dev
+```
+
 Then install OCaml tools and libraries:
 
-bash
-Copy
-Edit
+```bash
 opam init --bare --disable-sandboxing
 eval $(opam env)
-
+```
+```bash
 opam switch create ocreet 4.14.1
 eval $(opam env)
-
+```
 opam install dune eliom js_of_ocaml js_of_ocaml-ppx lwt \\
              ocsigenserver ocamlfind tyxml
+
 Running the App
 bash
 Copy
@@ -66,15 +68,10 @@ Edit
 make           # or dune build
 make launch    # or custom run command with ocsigenserver
 Then open your browser at:
-
-arduino
-Copy
-Edit
 http://localhost:8080/
+
 ## 📁 Project Structure
-bash
-Copy
-Edit
+```bash
 /src
   ├── main.ml            # Entry point
   ├── creet.ml           # Game logic per Creet
@@ -85,6 +82,7 @@ Edit
 dune-project
 Makefile
 README.md
+```
 
 ## 🧪 Educational Goals
 This project is designed to help students:
