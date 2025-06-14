@@ -94,10 +94,3 @@ Write fully-typed, interactive web apps using one language across client & serve
 Learn monadic concurrency with Lwt
 
 Work directly with the browser DOM and events via OCaml
-
-## 🧠 Credits
-Project subject: “H42N42” — 42 Paris
-
-Framework: Ocsigen by CNRS, Inria, Paris Diderot
-
-Developed by: Your Name
