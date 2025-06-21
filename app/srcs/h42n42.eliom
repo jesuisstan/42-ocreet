@@ -68,12 +68,12 @@ and start_game () =
 
 and init_client restart =
 	try
-	Random.self_init () ;
-	Config.set_std_vals () ;
-	let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
+		Random.self_init () ;
+		Config.set_std_vals () ;
+		let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
 		let ranges = Js.Unsafe.meth_call body "querySelectorAll" [| Js.Unsafe.inject (Js.string "span.rangeparent") |] in
-	List.iter MainUtils.replace_range_tagname (Dom.list_of_nodeList ranges) ;
-	let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
+		List.iter MainUtils.replace_range_tagname (Dom.list_of_nodeList ranges) ;
+		let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
 		(* Simple click handler using DOM events *)
 		Js.Unsafe.set start_button (Js.string "onclick") 
 			(Js.Unsafe.callback (fun () -> 
@@ -82,7 +82,7 @@ and init_client restart =
 				with 
 				| e -> 
 					let console = Js.Unsafe.get Js.Unsafe.global (Js.string "console") in
-					Js.Unsafe.meth_call console "log" [| Js.Unsafe.inject (Js.string ("Error in start_game: " ^ (Printexc.to_string e))) |]
+					ignore (Js.Unsafe.meth_call console "log" [| Js.Unsafe.inject (Js.string ("Error in start_game: " ^ (Printexc.to_string e))) |])
 			));
 		Lwt.return_unit
 	with 

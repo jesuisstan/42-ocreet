@@ -97,7 +97,7 @@ for file in bestioleType.eliom utils.eliom config.eliom dragging.eliom page.elio
         CLIENT_CMOS="$CLIENT_CMOS $cmo_file"
     fi
 done
-js_of_eliom -o static/h42n42.js -ppx -package eliom.client -package js_of_ocaml-lwt -package bigstringaf -jsopt $(opam var lib)/bigstringaf/runtime.js $CLIENT_CMOS
+js_of_eliom -o static/h42n42.js -ppx -package eliom.client -package js_of_ocaml-lwt $CLIENT_CMOS
 
 # Generate configuration file
 echo "⚙️  Generating configuration file..."
