@@ -70,7 +70,7 @@ span.value {
   position: absolute;
   width: 400px;
   height: 175px;
-  background-color: #ee9c9c;
+  background-color: #f3bbbb;
   z-index: 2;
   border-radius: 4px;
   text-align: center;
@@ -132,26 +132,19 @@ span.value {
 }
 
 .hospital {
-  background-color: #fdfdfd;
+  background-color: #c2ecb3;
+}
+
+.hospital-image {
+  margin: 0 5%;
 }
 
 .river {
-  background-color: #fdfdfd;
+  background-color: #b75e5e;
 }
 
-.wave {
-  width: 100%;
-  filter: blur(0.5px);
-  opacity: 0.8;
-  height: 22px;
-}
-
-.wave1 {
-  margin-top: 3px;
-}
-
-.wave2 {
-  margin-top: -6px;
+.river-single {
+  margin: 0 5%;
 }
 
 .center-vertical {
@@ -161,8 +154,4 @@ span.value {
 
 .center-horizontal {
   text-align: center;
-}
-
-.hospital-image {
-  margin: 0 11%;
 }

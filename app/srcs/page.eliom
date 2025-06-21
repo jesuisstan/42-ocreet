@@ -4,26 +4,32 @@ open Eliom_content.Html.D
 open Eliom_content.Html
 open Lwt
 
-let wave_images =
-	let _make_wave_image cls =
+let river_images =
+	let _make_river_image () =
 		img
 			~alt:""
-			~a:[a_class ["wave" ; cls]]
-			~src:(make_uri (Eliom_service.static_dir ()) ["images" ; "wave.png"]) ()
+			~a:[a_class ["center-vertical" ; "river-single"]]
+			~src:(make_uri (Eliom_service.static_dir ()) ["images" ; "river.png"]) ()
 	in
-	let rec _make_wave_images acc current_height =
-		let new_image = _make_wave_image "wave2" in
-		if current_height + 22 > Config.extremes_height then acc
-		else _make_wave_images (new_image::acc) (current_height + 21)
+	let nb_river_images =
+		if Config.extremes_height > 305 then 1
+		else if Config.extremes_height > 120 then 2
+		else 5
 	in
-	let first_image = _make_wave_image "wave1" in
-	first_image::_make_wave_images [] 25
+	let rec _make_river_images = function
+		| 0 -> []
+		| n -> (_make_river_image ())::(_make_river_images (n - 1))
+	in
+	_make_river_images nb_river_images
 
 let river =
 	div ~a:[
 		a_class ["extreme" ; "river"] ;
 		a_style ("height:" ^ string_of_int Config.extremes_height ^ "px;")
-	] wave_images
+	] [
+		div ~a:[a_class ["center-vertical" ; "center-horizontal"]]
+			river_images
+	]
 
 let hospital_images =
 	let _make_hospital_image () =
@@ -35,7 +41,7 @@ let hospital_images =
 	let nb_hospital_images =
 		if Config.extremes_height > 305 then 1
 		else if Config.extremes_height > 120 then 2
-		else 3
+		else 5
 	in
 	let rec _make_hospital_images = function
 		| 0 -> []
@@ -103,7 +109,7 @@ let board_container =
 
 let start_button =
 	div ~a:[a_class ["btn start-game"]] [pcdata "Start game"]
-	
+
 let first_input_parent =
 	div ~a:[a_class ["input-parent"]] [
 		pcdata "Bestiole size : ";
