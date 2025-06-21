@@ -1,5 +1,3 @@
-
-
 [%%shared
 
 open Eliom_content.Html.D
@@ -90,7 +88,7 @@ and init_client restart =
 	with 
 	| e -> 
 		let console = Js.Unsafe.get Js.Unsafe.global (Js.string "console") in
-		Js.Unsafe.meth_call console "log" [| Js.Unsafe.inject (Js.string ("Error in init_client: " ^ (Printexc.to_string e))) |];
+		ignore (Js.Unsafe.meth_call console "log" [| Js.Unsafe.inject (Js.string ("Error in init_client: " ^ (Printexc.to_string e))) |]);
 		Lwt.return_unit
 
 and exit_game () =

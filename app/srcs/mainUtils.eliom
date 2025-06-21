@@ -73,9 +73,9 @@ let replace_range_tagname range =
 	| [] -> ()
 	| hd :: rest -> (
 			let value, min, max = Hashtbl.find Config.vals (Js.to_string (Js.Unsafe.get hd (Js.string "id"))) in
-			Js.Unsafe.meth_call hd "setAttribute" [| Js.Unsafe.inject (Js.string "min"); Js.Unsafe.inject (Js.string (string_of_int min)) |] ;
-			Js.Unsafe.meth_call hd "setAttribute" [| Js.Unsafe.inject (Js.string "max"); Js.Unsafe.inject (Js.string (string_of_int max)) |] ;
-			Js.Unsafe.meth_call hd "setAttribute" [| Js.Unsafe.inject (Js.string "value"); Js.Unsafe.inject (Js.string (string_of_int value)) |]
+			ignore (Js.Unsafe.meth_call hd "setAttribute" [| Js.Unsafe.inject (Js.string "min"); Js.Unsafe.inject (Js.string (string_of_int min)) |]) ;
+			ignore (Js.Unsafe.meth_call hd "setAttribute" [| Js.Unsafe.inject (Js.string "max"); Js.Unsafe.inject (Js.string (string_of_int max)) |]) ;
+			ignore (Js.Unsafe.meth_call hd "setAttribute" [| Js.Unsafe.inject (Js.string "value"); Js.Unsafe.inject (Js.string (string_of_int value)) |])
 		)
 
 let change_naughty_rotation bestiole existing_bestioles =

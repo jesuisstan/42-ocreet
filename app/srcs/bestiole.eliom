@@ -1,5 +1,3 @@
-
-
 [%%server
 
 (* Server-side placeholder - bestiole logic is client-side only *)
@@ -25,10 +23,10 @@ let cure_bestiole bestiole =
 	if bestiole.state = Beserk then (
 		bestiole.size <- float_of_int (Config.get_val "bestiole-size") ;
 		let size_str = (Config.get_val "bestiole-size") |> string_of_int |> Js.string in
-			Js.Unsafe.meth_call bestiole.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |]
+			ignore (Js.Unsafe.meth_call bestiole.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |])
 	) ;
 	bestiole.state <- StdIll false ;
-	Js.Unsafe.meth_call bestiole.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string "./images/bestiole_sane.png") |] ;
+	ignore (Js.Unsafe.meth_call bestiole.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string "./images/bestiole_sane.png") |]) ;
 	bestiole.got_infected_at <- None ;
 	bestiole.full_size_at <- None
 
@@ -40,7 +38,7 @@ let make_bestiole_ill bestiole =
 		| 1 -> bestiole.state <- Naughty ; "./images/bestiole_naughty.png"
 		| _ -> bestiole.state <- StdIll true ; "./images/bestiole_ill.png"
 	) in
-	Js.Unsafe.meth_call bestiole.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string img_src) |]
+	ignore (Js.Unsafe.meth_call bestiole.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string img_src) |])
 
 let kill_bestiole bestiole =
 	bestiole.dead <- true ;
@@ -73,7 +71,7 @@ let update_size bestiole =
 				let multiplier = if multiplier > 4.0 then 4.0 else multiplier in
 				bestiole.size <- float_of_int (Config.get_val "bestiole-size") *. multiplier ;
 				let size_str = bestiole.size |> string_of_float |> Js.string in
-				Js.Unsafe.meth_call bestiole.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |]
+				ignore (Js.Unsafe.meth_call bestiole.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |])
 			)
 		| _ -> ()
  	)
@@ -143,7 +141,7 @@ let make_bestiole ?fadein:(fadein=false) start_time dragging_handler =
 			a_class ["bestiole"] ;
 			a_style (if fadein then "animation: fadein 2s;" else "")
 		]
-		~src:(make_uri (Eliom_service.static_dir ()) ["images" ; "bestiole_sane.png"]) ()
+		~src:(make_uri ~service:(Eliom_service.static_dir ()) ["images" ; "bestiole_sane.png"]) ()
 	in
 	let bestiole = {
 		elt = image ;
