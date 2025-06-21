@@ -10,6 +10,10 @@
 
 # ocamlbuild working directory
 _build/
+_client/
+_server/
+_deps/
+static/
 
 # ocamlbuild targets
 *.byte
