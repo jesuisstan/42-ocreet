@@ -14,6 +14,7 @@ _client/
 _server/
 _deps/
 static/
+.depend
 
 # ocamlbuild targets
 *.byte
