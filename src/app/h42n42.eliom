@@ -63,7 +63,7 @@ and start_game () =
 	in
 	let dragging_handler = Dragging.make_handler events_cbs move set_dragging_status get_dom_elt in
 	let attach_n_creatures = Creature.make_creatures_and_attach start_time dragging_handler container in
-	let nb_creatures = (Config.get_val "starting-nb-creatures") in
+	let nb_creatures = (Config.get_val "starting-number-of-creatures") in
 	make_creatures_loop true nb_creatures [] [] attach_n_creatures
 
 and init_client restart =

@@ -12,7 +12,7 @@ open Eliom_content.Html
 open Lwt
 open CreatureType
 
-let is_ill creature =
+let is_sick creature =
 	match creature.state with
 	| StdIll false -> false
 	| StdIll true -> true
@@ -30,13 +30,13 @@ let cure_creature creature =
 	creature.got_infected_at <- None ;
 	creature.full_size_at <- None
 
-let make_creature_ill creature =
+let make_creature_sick creature =
 	let n = Random.int 10 in
 	creature.got_infected_at <- Some (Utils.get_time ()) ;
 	let img_src = ( match n with
 		| 0 -> creature.state <- Berserk ; creature.full_size_at <- Some (Utils.get_time () +. 7.0) ; "./images/creature_berserk.png"
 		| 1 -> creature.state <- Naughty ; "./images/creature_naughty.png"
-		| _ -> creature.state <- StdIll true ; "./images/creature_ill.png"
+		| _ -> creature.state <- StdIll true ; "./images/creature_sick.png"
 	) in
 	ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string img_src) |])
 
@@ -99,12 +99,12 @@ let change_rotation_if_ok creature =
 		)
 	)
 
-let make_ill_if_ok creature =
-	if not (is_ill creature) && creature.y <= float_of_int Config.extremes_height then
-		make_creature_ill creature
+let make_sick_if_ok creature =
+	if not (is_sick creature) && creature.y <= float_of_int Config.extremes_height then
+		make_creature_sick creature
 
 let rec creature_thread creature =
-	let living_time_after_infection = Config.get_val "living-time-after-infection" in
+	let living_time_after_infection = Config.get_val "life-time-after-infection" in
 	let living_time_after_infection = float_of_int living_time_after_infection in
 	match creature.got_infected_at with
 	| Some time when Utils.get_time () -. time >= living_time_after_infection ->
@@ -120,7 +120,7 @@ let rec creature_thread creature =
 				update_size creature ;
 				let x, y = next_coords creature in
 				CreatureUtils.move_creature_bounce creature x y ;
-				make_ill_if_ok creature ;
+				make_sick_if_ok creature ;
 				creature_thread creature
 		)
 	)

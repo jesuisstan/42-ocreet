@@ -110,11 +110,11 @@ let start_button =
 
 let first_input_parent =
 	div ~a:[a_class ["input-parent"]] [
-		txt "Creature size : ";
+		txt "Creature's size: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
 			Form.input ~a:[a_id "creature-size"] ~input_type:`Range Form.string
 		] ;
-		txt "Creature speed : ";
+		txt "Creature's speed: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
 			Form.input ~a:[a_id "creature-speed"] ~input_type:`Range Form.string
 		] ;
@@ -122,9 +122,9 @@ let first_input_parent =
 
 let second_input_parent =
 	div ~a:[a_class ["input-parent"]] [
-		txt "Starting nb creatures : ";
+		txt "Starting number of creatures: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
-			Form.input ~a:[a_id "starting-nb-creatures"] ~input_type:`Range Form.string
+			Form.input ~a:[a_id "starting-number-of-creatures"] ~input_type:`Range Form.string
 		] ;
 		txt "New creature every n second : ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
@@ -134,9 +134,9 @@ let second_input_parent =
 
 let third_input_parent =
 	div ~a:[a_class ["input-parent"]] [
-		txt "Ill surviving time : ";
+		txt "Sickness time: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "thd-parent"] [
-			Form.input ~a:[a_id "living-time-after-infection"] ~input_type:`Range Form.string
+			Form.input ~a:[a_id "life-time-after-infection"] ~input_type:`Range Form.string
 		] ;
 		start_button
 	]
@@ -148,17 +148,31 @@ let form =
 		third_input_parent
 	]
 
+let agenda_container =
+	div ~a:[a_class ["agenda-container"]] [
+		p ~a:[a_class ["centertext" ; "agenda"]] [
+			txt "Creatures have lived in a peaceful land bordered by a river. Unfortunately, the river has been polluted by H42N42, a deadly and very infectious virus for some time." ;
+			br () ;
+			txt "The Creatures will not survive without your assistance! Your goal will be to help them stay away from the river and to bring the sick ones to the hospital where they will be healed so they don't contaminate the others."
+		] ;
+		form
+	]
+
+let main_content =
+	div ~a:[a_class ["main-content"]] [
+		board_container;
+		agenda_container
+	]
+
 let body_html =
 	(body [
 		h1 [txt "OCREET GAME"] ;
-		p ~a:[a_class ["centertext" ; "agenda"]] [txt "Creatures have lived in a peaceful land bordered by a river. Unfortunately, the river has been polluted by H42N42, a deadly and very infectious virus for some time. The Creatures will not survive without your assistance! Your goal will be to help them stay away from the river and to bring the sick ones to the hospital where they will be healed so they don't contaminate the others."] ;
-		form ;
-		board_container ;
+		main_content
 	])
 
 let make () =
 	html
-		(head (title (txt "H42N42"))
+		(head (title (txt "OCREET GAME"))
 			[css_link ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["css" ; "h42n42.css"]) () ;
 			css_link ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["css" ; "materialize.min.css"]) () ;
 			js_script ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["js" ; "jquery.min.js"]) () ;

@@ -105,12 +105,12 @@ let change_naughty_rotation creature existing_creatures =
 		)
 	)
 
-let make_ill_if_collision quadtree creature =
-	let other_creature_ill = (fun x _ -> not x.currently_dragged && Creature.is_ill x) in
-	if not (Creature.is_ill creature) && not creature.currently_dragged
-		&& CreatureQuadtree.collision_pred quadtree creature other_creature_ill then (
+let make_sick_if_collision quadtree creature =
+	let other_creature_sick = (fun x _ -> not x.currently_dragged && Creature.is_sick x) in
+	if not (Creature.is_sick creature) && not creature.currently_dragged
+		&& CreatureQuadtree.collision_pred quadtree creature other_creature_sick then (
 		match Random.int 10 with
-		| 0 -> Creature.make_creature_ill creature
+		| 0 -> Creature.make_creature_sick creature
 		| _ -> ()
 	)
 
@@ -120,7 +120,7 @@ let rec check_for_collisions_thread existing_creatures =
 		let height = float_of_int Config.board_height in
 		let quadtree = CreatureQuadtree.make width height in
 		let quadtree = List.fold_left (fun acc b -> CreatureQuadtree.add acc b) quadtree existing_creatures in
-		List.iter (make_ill_if_collision quadtree) existing_creatures ;
+		List.iter (make_sick_if_collision quadtree) existing_creatures ;
 		List.iter (fun x -> change_naughty_rotation x existing_creatures) existing_creatures ;
 		check_for_collisions_thread existing_creatures
 

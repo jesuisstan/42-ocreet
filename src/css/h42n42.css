@@ -32,16 +32,15 @@ span.value {
 }
 
 .all-input-parent {
-  text-align: center;
+  width: 100%;
+  max-width: 600px;
   margin-top: 42px;
   margin-bottom: 42px;
 }
 
 .input-parent {
-  width: 270px;
-  margin: 0 40px;
-  display: inline-block;
-  vertical-align: top;
+  display: block;
+  margin-bottom: 20px;
 }
 
 .rangeparent {
@@ -67,15 +66,15 @@ span.value {
 }
 
 .game-over-container {
+  display: none;
   position: absolute;
   width: 400px;
   height: 175px;
   background-color: #f3bbbb;
   z-index: 2;
-  border-radius: 4px;
+  border-radius: 42px;
   text-align: center;
-  box-shadow: 11px 11px 20px 0px #25292e;
-  display: none;
+  box-shadow: 10px 10px 15px 2px #25292e;
 }
 
 .appear {
@@ -101,7 +100,7 @@ span.value {
 }
 
 .board-container {
-  margin: 0 auto;
+  flex-shrink: 0;
 }
 
 .creature-container {
@@ -154,4 +153,26 @@ span.value {
 
 .center-horizontal {
   text-align: center;
+}
+
+.main-content {
+  display: flex;
+  gap: 40px;
+  margin-top: 42px;
+  align-items: flex-start;
+  padding: 0 42px;
+}
+
+@media (max-width: 1200px) {
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.agenda-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
