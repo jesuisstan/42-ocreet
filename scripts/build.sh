@@ -97,7 +97,8 @@ for file in bestioleType.eliom utils.eliom config.eliom dragging.eliom page.elio
         CLIENT_CMOS="$CLIENT_CMOS $cmo_file"
     fi
 done
-js_of_eliom -o static/h42n42.js -ppx -package eliom.client -package js_of_ocaml-lwt $CLIENT_CMOS
+BIGSTRING_RUNTIME=$(find $(ocamlfind query bigstringaf) -name "runtime.js")
+js_of_eliom -o static/h42n42.js -ppx -package eliom.client -package js_of_ocaml-lwt -jsopt "$BIGSTRING_RUNTIME" $CLIENT_CMOS
 
 # Generate configuration file
 echo "⚙️  Generating configuration file..."
