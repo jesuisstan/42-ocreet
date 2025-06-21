@@ -14,8 +14,8 @@ open CreatureType
 
 let is_sick creature =
 	match creature.state with
-	| StdIll false -> false
-	| StdIll true -> true
+	| StdSick false -> false
+	| StdSick true -> true
 	| Berserk -> true
 	| Naughty -> true
 
@@ -25,7 +25,7 @@ let cure_creature creature =
 		let size_str = (Config.get_val "creature-size") |> string_of_int |> Js.string in
 			ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |])
 	) ;
-	creature.state <- StdIll false ;
+	creature.state <- StdSick false ;
 	ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string "./images/creature_sane.png") |]) ;
 	creature.got_infected_at <- None ;
 	creature.full_size_at <- None
@@ -34,9 +34,12 @@ let make_creature_sick creature =
 	let n = Random.int 10 in
 	creature.got_infected_at <- Some (Utils.get_time ()) ;
 	let img_src = ( match n with
+		(* A Creet that gets sick has a 10% risk of becoming berserk! *)
 		| 0 -> creature.state <- Berserk ; creature.full_size_at <- Some (Utils.get_time () +. 7.0) ; "./images/creature_berserk.png"
+		(* Also, a Creet that gets contaminated has a 10% risk of becoming mean!
+		   It should shrink 15% smaller than its regular size. *)
 		| 1 -> creature.state <- Naughty ; "./images/creature_naughty.png"
-		| _ -> creature.state <- StdIll true ; "./images/creature_sick.png"
+		| _ -> creature.state <- StdSick true ; "./images/creature_sick.png"
 	) in
 	ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string img_src) |])
 
@@ -48,33 +51,42 @@ let kill_creature creature =
 
 let update_speed creature =
 	let multiplier = match creature.state with
-		| StdIll true -> 0.85
-		| StdIll false -> 1.0
+		| StdSick true -> 0.85 (* A Creet that gets contaminated instantly gets 15% slower. *)
+		| StdSick false -> 1.0
 		| Berserk -> 0.85
-		| Naughty -> 1.15
+		| Naughty -> 1.15 (* A 'mean' Creet runs 15% faster to contaminate others. *)
 	in
+	(* Because of the panic, Creets accelerate in time so the difficulty level increases. *)
 	let time_speedup = (Utils.get_time () -. creature.start_time) /. 120.0 in
 	let time_speedup = 1.0 +. time_speedup in
 	creature.speed <- float_of_int (Config.get_val "creature-speed") *. time_speedup *. multiplier 
 
 let update_size creature =
-	if creature.state <> Berserk then ()
-	else (
-		match creature.full_size_at with
-		| Some x -> (
-			let current_time = Utils.get_time () in
-				let multiplier = ( if current_time >= x then
-						4.0
-					else
-						1.0 +. ((current_time +. 7.0 -. x) /. 7.0 *. 2.0)
-				) in
-				let multiplier = if multiplier > 4.0 then 4.0 else multiplier in
-				creature.size <- float_of_int (Config.get_val "creature-size") *. multiplier ;
-				let size_str = creature.size |> string_of_float |> Js.string in
-				ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |])
-			)
-		| _ -> ()
- 	)
+	let base_size = float_of_int (Config.get_val "creature-size") in
+	let new_size =
+		match creature.state with
+		| Naughty ->
+			(* It shrinks 15% smaller than its regular size. *)
+			base_size *. 0.85
+		| Berserk ->
+			(* When a Creet becomes berserk, its diameter slowly grows until it has quadrupled. *)
+			(match creature.full_size_at with
+			| Some full_size_time ->
+				let start_time = full_size_time -. 7.0 in
+				let elapsed_time = Utils.get_time () -. start_time in
+				let progress = min 1.0 (elapsed_time /. 7.0) in
+				let multiplier = 1.0 +. (progress *. 3.0) in
+				base_size *. multiplier
+			| None -> creature.size)
+		| _ ->
+			(* Back to normal size if cured *)
+			base_size
+	in
+	if creature.size <> new_size then (
+		creature.size <- new_size;
+		let size_str = new_size |> string_of_float |> Js.string in
+		ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |])
+	)
 
 let next_coords creature =
 	let deg_to_rad deg =
@@ -152,7 +164,7 @@ let make_creature ?fadein:(fadein=false) start_time dragging_handler =
 		rotation = 0 ;
 		start_time = start_time ;
 		speed = float_of_int (Config.get_val "creature-speed") ;
-		state = StdIll false ;
+		state = StdSick false ;
 		change_rotation_at = Utils.random_forward_time () ;
 		updated_at = None ;
 		dead = false ;

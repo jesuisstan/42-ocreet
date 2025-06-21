@@ -30,7 +30,7 @@ let rec wait_for_threads beginned_at threads existing_creatures attach_n_creatur
 				)
 
 and make_creatures_loop start nb threads existing_creatures attach_n_creatures =
-	let at_least_one_healthy = List.exists (fun b -> b.state = StdIll false) existing_creatures in
+	let at_least_one_healthy = List.exists (fun b -> b.state = StdSick false) existing_creatures in
 	let nb = if start || at_least_one_healthy then nb else 0 in
 	let new_creatures = attach_n_creatures (not start) nb in
 	let existing_creatures = List.fold_left (fun acc b -> b::acc) existing_creatures new_creatures in

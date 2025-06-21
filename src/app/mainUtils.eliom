@@ -83,7 +83,7 @@ let change_naughty_rotation creature existing_creatures =
 		rad *. (180.0 /. 3.14159265)
 	in
 	let closer_creature acc b =
-		if b.state <> StdIll false then acc
+		if b.state <> StdSick false then acc
 		else ( match acc with
 			| None -> Some b
 			| Some a -> (

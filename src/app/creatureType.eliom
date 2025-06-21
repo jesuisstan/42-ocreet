@@ -14,7 +14,7 @@ open Lwt
 open Js_of_ocaml
 
 type creature_state =
-	| StdIll of bool
+	| StdSick of bool
 	| Berserk
 	| Naughty
 
