@@ -3,7 +3,7 @@
 open Eliom_content.Html.D
 open Eliom_content.Html
 open Lwt
-open BestioleType
+open CreatureType
 
 ]
 
@@ -11,14 +11,14 @@ open BestioleType
 
 open Js_of_ocaml
 
-module BestioleLeaf : (Quadtree.Leaf with type t = bestiole) = struct
-	type t = bestiole
-	let get_coords bestiole =
-		(bestiole.x, bestiole.y)
-	let get_size bestiole =
-		(bestiole.size, bestiole.size)
+module CreatureLeaf : (Quadtree.Leaf with type t = creature) = struct
+	type t = creature
+	let get_coords creature =
+		(creature.x, creature.y)
+	let get_size creature =
+		(creature.size, creature.size)
 end
-module BestioleQuadtree = Quadtree.Make (BestioleLeaf)
+module CreatureQuadtree = Quadtree.Make (CreatureLeaf)
 
 let game_over_class = "game-over-animation"
 
@@ -78,50 +78,50 @@ let replace_range_tagname range =
 			ignore (Js.Unsafe.meth_call hd "setAttribute" [| Js.Unsafe.inject (Js.string "value"); Js.Unsafe.inject (Js.string (string_of_int value)) |])
 		)
 
-let change_naughty_rotation bestiole existing_bestioles =
+let change_naughty_rotation creature existing_creatures =
 	let rad_to_deg rad =
 		rad *. (180.0 /. 3.14159265)
 	in
-	let closer_bestiole acc b =
+	let closer_creature acc b =
 		if b.state <> StdIll false then acc
 		else ( match acc with
 			| None -> Some b
 			| Some a -> (
-				let distance1 = sqrt ((b.x -. bestiole.x) ** 2.0 +. (b.y -. bestiole.y) ** 2.0) in
-				let distance2 = sqrt ((a.x -. bestiole.x) ** 2.0 +. (a.y -. bestiole.y) ** 2.0) in
+				let distance1 = sqrt ((b.x -. creature.x) ** 2.0 +. (b.y -. creature.y) ** 2.0) in
+				let distance2 = sqrt ((a.x -. creature.x) ** 2.0 +. (a.y -. creature.y) ** 2.0) in
 				if distance1 < distance2 then Some b
 				else Some a
 			)
 		)
 	in
-	if bestiole.state = Naughty then (
-		match List.fold_left closer_bestiole None existing_bestioles with
+	if creature.state = Naughty then (
+		match List.fold_left closer_creature None existing_creatures with
 		| None -> ()
 		| Some b -> (
-			let x = b.x -. bestiole.x in
-			let y = b.y -. bestiole.y in
+			let x = b.x -. creature.x in
+			let y = b.y -. creature.y in
 			let deg = rad_to_deg (atan2 y x) in
-			BestioleUtils.update_rotation bestiole (int_of_float deg)
+			CreatureUtils.update_rotation creature (int_of_float deg)
 		)
 	)
 
-let make_ill_if_collision quadtree bestiole =
-	let other_bestiole_ill = (fun x _ -> not x.currently_dragged && Bestiole.is_ill x) in
-	if not (Bestiole.is_ill bestiole) && not bestiole.currently_dragged
-		&& BestioleQuadtree.collision_pred quadtree bestiole other_bestiole_ill then (
+let make_ill_if_collision quadtree creature =
+	let other_creature_ill = (fun x _ -> not x.currently_dragged && Creature.is_ill x) in
+	if not (Creature.is_ill creature) && not creature.currently_dragged
+		&& CreatureQuadtree.collision_pred quadtree creature other_creature_ill then (
 		match Random.int 10 with
-		| 0 -> Bestiole.make_bestiole_ill bestiole
+		| 0 -> Creature.make_creature_ill creature
 		| _ -> ()
 	)
 
-let rec check_for_collisions_thread existing_bestioles =
+let rec check_for_collisions_thread existing_creatures =
 	Js_of_ocaml_lwt.Lwt_js.sleep 0.1 >>= fun () ->
 		let width = float_of_int Config.board_width in
 		let height = float_of_int Config.board_height in
-		let quadtree = BestioleQuadtree.make width height in
-		let quadtree = List.fold_left (fun acc b -> BestioleQuadtree.add acc b) quadtree existing_bestioles in
-		List.iter (make_ill_if_collision quadtree) existing_bestioles ;
-		List.iter (fun x -> change_naughty_rotation x existing_bestioles) existing_bestioles ;
-		check_for_collisions_thread existing_bestioles
+		let quadtree = CreatureQuadtree.make width height in
+		let quadtree = List.fold_left (fun acc b -> CreatureQuadtree.add acc b) quadtree existing_creatures in
+		List.iter (make_ill_if_collision quadtree) existing_creatures ;
+		List.iter (fun x -> change_naughty_rotation x existing_creatures) existing_creatures ;
+		check_for_collisions_thread existing_creatures
 
 ]

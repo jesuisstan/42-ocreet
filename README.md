@@ -110,10 +110,10 @@ opam install eliom js_of_ocaml js_of_ocaml-ppx js_of_ocaml-lwt \
 
 ```
 42-ocreet/
-├── app/
-│   ├── srcs/                   # OCaml source files
+├── src/
+│   ├── app/                   # OCaml source files
 │   │   ├── h42n42.eliom       # Main application entry
-│   │   ├── bestiole.eliom     # Creet logic & behavior
+│   │   ├── creature.eliom     # Creet logic & behavior
 │   │   ├── page.eliom         # UI and DOM generation
 │   │   ├── dragging.eliom     # Mouse interaction
 │   │   ├── quadtree.eliom     # Collision optimization
@@ -167,7 +167,7 @@ This project demonstrates:
 **Server won't start?**
 
 - Check port 8080 is free: `lsof -i :8080`
-- Verify build completed: look for `app/srcs/local/var/www/ocreet/eliom/ocreet.js`
+- Verify build completed: look for `src/app/local/var/www/ocreet/eliom/ocreet.js`
 
 **Game not loading?**
 

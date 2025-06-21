@@ -3,13 +3,17 @@
 # H42N42 Clean Script
 # Remove all build artifacts and temporary files
 
-cd "$(dirname "$0")/../app/srcs"
+cd "$(dirname "$0")/../src/app"
 
 echo "🧹 Cleaning H42N42 project..."
 
 # Remove build directories
 echo "📁 Removing build directories..."
 rm -rf _server _client _deps local
+
+# Remove static files
+echo "📁 Removing static files..."
+rm -rf static
 
 # Remove compiled files
 echo "🗑️  Removing compiled files..."

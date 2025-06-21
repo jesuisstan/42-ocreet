@@ -5,7 +5,7 @@
 
 set -e  # Exit on any error
 
-cd "$(dirname "$0")/../app/srcs"
+cd "$(dirname "$0")/../src/app"
 
 echo "🔨 Building H42N42 project..."
 
@@ -29,7 +29,7 @@ cp -r ../images static/
 # Generate dependencies
 echo "🔗 Generating dependencies..."
 # Process in dependency order
-for file in bestioleType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom bestioleUtils.eliom bestiole.eliom mainUtils.eliom h42n42.eliom; do
+for file in creatureType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom creatureUtils.eliom creature.eliom mainUtils.eliom h42n42.eliom; do
     if [ -f "$file" ]; then
         echo "  Processing $file..."
         eliomdep -server -ppx "$file" > "_deps/${file}.server"
@@ -43,7 +43,7 @@ cat _deps/*.server _deps/*.client > .depend
 # Compile server side with type generation
 echo "🖥️  Compiling server side..."
 # Compile in dependency order - generate types and compile each file sequentially
-for file in bestioleType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom bestioleUtils.eliom bestiole.eliom mainUtils.eliom h42n42.eliom; do
+for file in creatureType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom creatureUtils.eliom creature.eliom mainUtils.eliom h42n42.eliom; do
     if [ -f "$file" ]; then
         echo "  Generating types for $file..."
         eliomc -infer -ppx "$file"
@@ -66,7 +66,7 @@ done
 echo "📚 Creating server library..."
 # Link .cmo files in dependency order
 SERVER_CMOS=""
-for file in bestioleType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom bestioleUtils.eliom bestiole.eliom mainUtils.eliom h42n42.eliom; do
+for file in creatureType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom creatureUtils.eliom creature.eliom mainUtils.eliom h42n42.eliom; do
     cmo_file="_server/${file%.eliom}.cmo"
     if [ -f "$cmo_file" ]; then
         SERVER_CMOS="$SERVER_CMOS $cmo_file"
@@ -77,7 +77,7 @@ eliomc -a -o h42n42.cma $SERVER_CMOS
 # Compile client side
 echo "🌐 Compiling client side..."
 # Compile in dependency order
-for file in bestioleType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom bestioleUtils.eliom bestiole.eliom mainUtils.eliom h42n42.eliom; do
+for file in creatureType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom creatureUtils.eliom creature.eliom mainUtils.eliom h42n42.eliom; do
     if [ -f "$file" ]; then
         echo "  Compiling $file (client)..."
         js_of_eliom -c -ppx -package eliom.client -package js_of_ocaml-lwt "$file"
@@ -91,7 +91,7 @@ done
 echo "🎯 Creating JavaScript bundle..."
 # Link .cmo files in dependency order
 CLIENT_CMOS=""
-for file in bestioleType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom bestioleUtils.eliom bestiole.eliom mainUtils.eliom h42n42.eliom; do
+for file in creatureType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom creatureUtils.eliom creature.eliom mainUtils.eliom h42n42.eliom; do
     cmo_file="_client/${file%.eliom}.cmo"
     if [ -f "$cmo_file" ]; then
         CLIENT_CMOS="$CLIENT_CMOS $cmo_file"

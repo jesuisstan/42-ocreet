@@ -64,7 +64,7 @@ ocamlfind list | grep -E "(lwt|js_of_ocaml|eliom)"
 ## Структура проекта после сборки
 
 ```
-42-ocreet/app/srcs/
+42-ocreet/src/app/
 ├── *.eliom              # Исходный код OCaml
 ├── h42n42.conf.in       # Шаблон конфигурации
 ├── h42n42.conf          # Сгенерированная конфигурация

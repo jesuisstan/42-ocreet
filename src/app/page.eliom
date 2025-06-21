@@ -57,9 +57,9 @@ let hospital =
 			hospital_images
 	]
 
-let bestiole_container =
+let creature_container =
 	div ~a:[
-		a_class ["bestiole-container"] ;
+		a_class ["creature-container"] ;
 		a_style ("width:" ^ string_of_int Config.board_width ^ "px;" ^
 							"height:" ^ string_of_int Config.board_height ^ "px;")
 	] [
@@ -94,7 +94,7 @@ let board_container =
 			a_class ["hide-border" ; "left-right-border"] ;
 			a_style ("height:" ^ string_of_int Config.board_height ^ "px;")
 		] [] ;
-		bestiole_container ;
+		creature_container ;
 		div ~a:[
 			a_class ["hide-border" ; "left-right-border"] ;
 			a_style ("height:" ^ string_of_int Config.board_height ^ "px;")
@@ -110,25 +110,25 @@ let start_button =
 
 let first_input_parent =
 	div ~a:[a_class ["input-parent"]] [
-		txt "Bestiole size : ";
+		txt "Creature size : ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
-			Form.input ~a:[a_id "bestiole-size"] ~input_type:`Range Form.string
+			Form.input ~a:[a_id "creature-size"] ~input_type:`Range Form.string
 		] ;
-		txt "Bestiole speed : ";
+		txt "Creature speed : ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
-			Form.input ~a:[a_id "bestiole-speed"] ~input_type:`Range Form.string
+			Form.input ~a:[a_id "creature-speed"] ~input_type:`Range Form.string
 		] ;
 	]
 
 let second_input_parent =
 	div ~a:[a_class ["input-parent"]] [
-		txt "Starting nb bestioles : ";
+		txt "Starting nb creatures : ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
-			Form.input ~a:[a_id "starting-nb-bestioles"] ~input_type:`Range Form.string
+			Form.input ~a:[a_id "starting-nb-creatures"] ~input_type:`Range Form.string
 		] ;
-		txt "New bestiole every n second : ";
+		txt "New creature every n second : ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
-			Form.input ~a:[a_id "new-bestiole-every"] ~input_type:`Range Form.string
+			Form.input ~a:[a_id "new-creature-every"] ~input_type:`Range Form.string
 		] ;
 	]
 

@@ -5,7 +5,7 @@
 
 set -e  # Exit on any error
 
-cd "$(dirname "$0")/../app/srcs"
+cd "$(dirname "$0")/../src/app"
 
 # Check if project is built
 if [ ! -f "h42n42.cma" ] || [ ! -f "h42n42.conf" ] || [ ! -f "static/h42n42.js" ]; then

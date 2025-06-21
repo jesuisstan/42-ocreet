@@ -13,12 +13,12 @@ open Eliom_content.Html
 open Lwt
 open Js_of_ocaml
 
-type bestiole_state =
+type creature_state =
 	| StdIll of bool
-	| Beserk
+	| Berserk
 	| Naughty
 
-type bestiole = {
+type creature = {
 	elt:						Html_types.img D.elt ;
 	dom_elt:					Dom_html.element Js.t ;
 	mutable x:					float ;
@@ -27,7 +27,7 @@ type bestiole = {
 	mutable rotation:			int ;
 	start_time:					float ;
 	mutable speed:				float ;
-	mutable state:				bestiole_state ;
+	mutable state:				creature_state ;
 	mutable change_rotation_at:	float ;
 	mutable updated_at:			float option ;
 	mutable dead:				bool ;
