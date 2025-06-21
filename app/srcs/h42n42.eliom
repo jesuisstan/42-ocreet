@@ -103,7 +103,7 @@ and exit_game () =
 		Lwt.return ()
 
 (* Auto-initialize client when page loads *)
-let () = Lwt.async (fun () -> init_client false)
+let () = Eliom_client.onload (fun () -> Lwt.async (fun () -> init_client false))
 
 ]
 
