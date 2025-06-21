@@ -1,0 +1,85 @@
+_server/bestiole.cmo : _server/page.cmo
+_server/bestiole.cmx : _server/page.cmx
+_server/bestiole.type_mli : _server/page.cmo
+_server/bestiole.cmo : _server/bestiole.type_mli
+_server/bestiole.cmx : _server/bestiole.type_mli
+_server/bestioleType.cmo :
+_server/bestioleType.cmx :
+_server/bestioleType.cmo : _server/bestioleType.type_mli
+_server/bestioleType.cmx : _server/bestioleType.type_mli
+_server/bestioleUtils.cmo : _server/page.cmo
+_server/bestioleUtils.cmx : _server/page.cmx
+_server/bestioleUtils.type_mli : _server/page.cmo
+_server/bestioleUtils.cmo : _server/bestioleUtils.type_mli
+_server/bestioleUtils.cmx : _server/bestioleUtils.type_mli
+_server/config.cmo :
+_server/config.cmx :
+_server/config.cmo : _server/config.type_mli
+_server/config.cmx : _server/config.type_mli
+_server/dragging.cmo :
+_server/dragging.cmx :
+_server/dragging.cmo : _server/dragging.type_mli
+_server/dragging.cmx : _server/dragging.type_mli
+_server/h42n42.cmo : _server/page.cmo _server/bestioleType.cmo
+_server/h42n42.cmx : _server/page.cmx _server/bestioleType.cmx
+_server/h42n42.type_mli : _server/page.cmo _server/bestioleType.cmo
+_server/h42n42.cmo : _server/h42n42.type_mli
+_server/h42n42.cmx : _server/h42n42.type_mli
+_server/mainUtils.cmo : _server/page.cmo _server/bestioleType.cmo
+_server/mainUtils.cmx : _server/page.cmx _server/bestioleType.cmx
+_server/mainUtils.type_mli : _server/page.cmo _server/bestioleType.cmo
+_server/mainUtils.cmo : _server/mainUtils.type_mli
+_server/mainUtils.cmx : _server/mainUtils.type_mli
+_server/page.cmo : _server/config.cmo
+_server/page.cmx : _server/config.cmx
+_server/page.type_mli : _server/config.cmo
+_server/page.cmo : _server/page.type_mli
+_server/page.cmx : _server/page.type_mli
+_server/quadtree.cmo :
+_server/quadtree.cmx :
+_server/quadtree.cmo : _server/quadtree.type_mli
+_server/quadtree.cmx : _server/quadtree.type_mli
+_server/utils.cmo :
+_server/utils.cmx :
+_server/utils.cmo : _server/utils.type_mli
+_server/utils.cmx : _server/utils.type_mli
+_client/bestiole.cmo : _client/utils.cmo _client/dragging.cmo _client/config.cmo _client/bestioleUtils.cmo _client/bestioleType.cmo
+_client/bestiole.cmx : _client/utils.cmx _client/dragging.cmx _client/config.cmx _client/bestioleUtils.cmx _client/bestioleType.cmx
+_client/bestiole.cmo : _server/bestiole.type_mli
+_client/bestiole.cmx : _server/bestiole.type_mli
+_client/bestioleType.cmo :
+_client/bestioleType.cmx :
+_client/bestioleType.cmo : _server/bestioleType.type_mli
+_client/bestioleType.cmx : _server/bestioleType.type_mli
+_client/bestioleUtils.cmo : _client/utils.cmo _client/config.cmo _client/bestioleType.cmo
+_client/bestioleUtils.cmx : _client/utils.cmx _client/config.cmx _client/bestioleType.cmx
+_client/bestioleUtils.cmo : _server/bestioleUtils.type_mli
+_client/bestioleUtils.cmx : _server/bestioleUtils.type_mli
+_client/config.cmo :
+_client/config.cmx :
+_client/config.cmo : _server/config.type_mli
+_client/config.cmx : _server/config.type_mli
+_client/dragging.cmo :
+_client/dragging.cmx :
+_client/dragging.cmo : _server/dragging.type_mli
+_client/dragging.cmx : _server/dragging.type_mli
+_client/h42n42.cmo : _client/utils.cmo _client/mainUtils.cmo _client/dragging.cmo _client/config.cmo _client/bestioleUtils.cmo _client/bestioleType.cmo _client/bestiole.cmo
+_client/h42n42.cmx : _client/utils.cmx _client/mainUtils.cmx _client/dragging.cmx _client/config.cmx _client/bestioleUtils.cmx _client/bestioleType.cmx _client/bestiole.cmx
+_client/h42n42.cmo : _server/h42n42.type_mli
+_client/h42n42.cmx : _server/h42n42.type_mli
+_client/mainUtils.cmo : _client/utils.cmo _client/quadtree.cmo _client/config.cmo _client/bestioleUtils.cmo _client/bestioleType.cmo _client/bestiole.cmo
+_client/mainUtils.cmx : _client/utils.cmx _client/quadtree.cmx _client/config.cmx _client/bestioleUtils.cmx _client/bestioleType.cmx _client/bestiole.cmx
+_client/mainUtils.cmo : _server/mainUtils.type_mli
+_client/mainUtils.cmx : _server/mainUtils.type_mli
+_client/page.cmo :
+_client/page.cmx :
+_client/page.cmo : _server/page.type_mli
+_client/page.cmx : _server/page.type_mli
+_client/quadtree.cmo :
+_client/quadtree.cmx :
+_client/quadtree.cmo : _server/quadtree.type_mli
+_client/quadtree.cmx : _server/quadtree.type_mli
+_client/utils.cmo :
+_client/utils.cmx :
+_client/utils.cmo : _server/utils.type_mli
+_client/utils.cmx : _server/utils.type_mli

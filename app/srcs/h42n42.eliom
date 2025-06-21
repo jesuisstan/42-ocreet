@@ -70,12 +70,12 @@ and start_game () =
 
 and init_client restart =
 	try
-		Random.self_init () ;
-		Config.set_std_vals () ;
-		let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
+	Random.self_init () ;
+	Config.set_std_vals () ;
+	let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
 		let ranges = Js.Unsafe.meth_call body "querySelectorAll" [| Js.Unsafe.inject (Js.string "span.rangeparent") |] in
-		List.iter MainUtils.replace_range_tagname (Dom.list_of_nodeList ranges) ;
-		let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
+	List.iter MainUtils.replace_range_tagname (Dom.list_of_nodeList ranges) ;
+	let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
 		(* Simple click handler using DOM events *)
 		Js.Unsafe.set start_button (Js.string "onclick") 
 			(Js.Unsafe.callback (fun () -> 
@@ -95,7 +95,7 @@ and init_client restart =
 
 and exit_game () =
 	let container = Utils.elt_to_dom_elt ~%(Page.bestiole_container) in
-	MainUtils.add_lost_css container ;
+	MainUtils.add_game_over_css container ;
 	Js_of_ocaml_lwt.Lwt_js.sleep 1.0 >>= fun () ->
 		let game_over = Utils.elt_to_dom_elt ~%(Page.game_over) in
 		let classes = Js.to_string (Js.Unsafe.get game_over (Js.string "className")) in

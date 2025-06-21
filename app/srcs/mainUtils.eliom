@@ -1,5 +1,3 @@
-
-
 [%%shared
 
 open Eliom_content.Html.D
@@ -24,11 +22,11 @@ module BestioleQuadtree = Quadtree.Make (BestioleLeaf)
 
 let game_over_class = "game-over-animation"
 
-let add_lost_css dom_elt =
+let add_game_over_css dom_elt =
 	let classes = Js.to_string (Js.Unsafe.get dom_elt (Js.string "className")) in
 	Js.Unsafe.set dom_elt (Js.string "className") (Js.string (classes ^ " " ^ game_over_class))
 
-let remove_lost_css dom_elt =
+let remove_game_over_css dom_elt =
 	let classes = Js.to_string (Js.Unsafe.get dom_elt (Js.string "className")) in
 	if String.length classes > 30 then (
 		let ind = String.length classes - String.length (" " ^ game_over_class) in
@@ -37,7 +35,7 @@ let remove_lost_css dom_elt =
 	)
 
 let clear_game_board container =
-	remove_lost_css container ;
+	remove_game_over_css container ;
 	let game_over = Utils.elt_to_dom_elt ~%(Page.game_over) in
 	let style = Js.Unsafe.get game_over (Js.string "style") in
 	Js.Unsafe.set style (Js.string "display") (Js.string "none")

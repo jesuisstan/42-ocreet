@@ -124,7 +124,7 @@ let rec bestiole_thread bestiole =
 				BestioleUtils.move_bestiole_bounce bestiole x y ;
 				make_ill_if_ok bestiole ;
 				bestiole_thread bestiole
-			)
+		)
 	)
 
 let handle_bestiole_dragend bestiole =

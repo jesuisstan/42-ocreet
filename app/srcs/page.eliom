@@ -101,6 +101,9 @@ let board_container =
 		] []
 	]
 
+let start_button =
+	div ~a:[a_class ["btn start-game"]] [pcdata "Start game"]
+	
 let first_input_parent =
 	div ~a:[a_class ["input-parent"]] [
 		pcdata "Bestiole size : ";
@@ -124,9 +127,6 @@ let second_input_parent =
 			Form.input ~a:[a_id "new-bestiole-every"] ~input_type:`Range Form.string
 		] ;
 	]
-
-let start_button =
-	div ~a:[a_class ["btn start-game"]] [pcdata "Start game"]
 
 let third_input_parent =
 	div ~a:[a_class ["input-parent"]] [
