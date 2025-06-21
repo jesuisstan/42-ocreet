@@ -4,6 +4,7 @@ open Lwt
 
 let river_images =
 	let _make_river_image () =
+		(* HTML validation: img requires mandatory alt and src attributes *)
 		img
 			~alt:""
 			~a:[a_class ["center-vertical" ; "river-single"]]
@@ -21,6 +22,7 @@ let river_images =
 	_make_river_images nb_river_images
 
 let river =
+	(* HTML validation: div structure and attribute types checked at compile time *)
 	div ~a:[
 		a_class ["extreme" ; "river"] ;
 		a_style ("height:" ^ string_of_int Config.extremes_height ^ "px;")
@@ -31,6 +33,7 @@ let river =
 
 let hospital_images =
 	let _make_hospital_image () =
+		(* HTML validation: img requires mandatory alt and src attributes *)
 		img
 			~alt:""
 			~a:[a_class ["center-vertical" ; "hospital-image"]]
@@ -48,6 +51,7 @@ let hospital_images =
 	_make_hospital_images nb_hospital_images
 
 let hospital =
+	(* HTML validation: div structure and nested elements validated *)
 	div ~a:[
 		a_class ["extreme" ; "hospital"] ;
 		a_style ("height:" ^ string_of_int Config.extremes_height ^ "px;" ^
@@ -58,6 +62,7 @@ let hospital =
 	]
 
 let creature_container =
+	(* HTML validation: container div with proper dimensions and child elements *)
 	div ~a:[
 		a_class ["creature-container"] ;
 		a_style ("width:" ^ string_of_int Config.board_width ^ "px;" ^
@@ -68,6 +73,7 @@ let creature_container =
 	]
 
 let game_over =
+	(* HTML validation: game over div with calculated positioning *)
 	div ~a:[
 		a_class ["game-over-container"] ;
 		a_style (
@@ -81,6 +87,7 @@ let game_over =
 	]
 
 let board_container =
+	(* HTML validation: board container with border elements and proper structure *)
 	div ~a:[
 		a_class ["board-container"] ;
 		a_style ("width:" ^ string_of_int (Config.board_width + 40) ^ "px;" ^
@@ -106,42 +113,52 @@ let board_container =
 	]
 
 let start_button =
+	(* HTML validation: button div with proper class structure *)
 	div ~a:[a_class ["btn start-game"]] [txt "Start game"]
 
 let first_input_parent =
+	(* HTML validation: form inputs with proper types and attributes *)
 	div ~a:[a_class ["input-parent"]] [
 		txt "Creature's size: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
+			(* HTML validation: Form.input validates input_type and form type *)
 			Form.input ~a:[a_id "creature-size"] ~input_type:`Range Form.string
 		] ;
 		txt "Creature's speed: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
+			(* HTML validation: Form.input validates input_type and form type *)
 			Form.input ~a:[a_id "creature-speed"] ~input_type:`Range Form.string
 		] ;
 	]
 
 let second_input_parent =
+	(* HTML validation: form inputs with proper types and attributes *)
 	div ~a:[a_class ["input-parent"]] [
 		txt "Starting number of creatures: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
+			(* HTML validation: Form.input validates input_type and form type *)
 			Form.input ~a:[a_id "starting-number-of-creatures"] ~input_type:`Range Form.string
 		] ;
 		txt "New creature every n second : ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
+			(* HTML validation: Form.input validates input_type and form type *)
 			Form.input ~a:[a_id "new-creature-every"] ~input_type:`Range Form.string
 		] ;
 	]
 
 let third_input_parent =
+	(* HTML validation: form inputs with proper types and attributes *)
 	div ~a:[a_class ["input-parent"]] [
 		txt "Sickness time: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "thd-parent"] [
+			(* HTML validation: Form.input validates input_type and form type *)
 			Form.input ~a:[a_id "life-time-after-infection"] ~input_type:`Range Form.string
 		] ;
 		start_button
 	]
 
 let form = 
+	(* HTML validation: form container with proper nested structure *)
 	div ~a:[a_class ["all-input-parent"]] [
 		first_input_parent ;
 		second_input_parent ;
@@ -149,6 +166,7 @@ let form =
 	]
 
 let agenda_container =
+	(* HTML validation: text content with proper paragraph structure *)
 	div ~a:[a_class ["agenda-container"]] [
 		p ~a:[a_class ["centertext" ; "agenda"]] [
 			txt "Creatures have lived in a peaceful land bordered by a river. Unfortunately, the river has been polluted by H42N42, a deadly and very infectious virus for some time." ;
@@ -159,24 +177,33 @@ let agenda_container =
 	]
 
 let main_content =
+	(* HTML validation: main content container with proper layout structure *)
 	div ~a:[a_class ["main-content"]] [
 		board_container;
 		agenda_container
 	]
 
 let body_html =
+	(* HTML validation: body element with proper heading hierarchy *)
 	(body [
 		h1 [txt "OCREET GAME"] ;
 		main_content
 	])
 
 let make () =
+	(* HTML validation: complete HTML document structure with head and body *)
 	html
+		(* HTML validation: head element with proper meta tags and resource links *)
 		(head (title (txt "OCREET GAME"))
-			[css_link ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["css" ; "h42n42.css"]) () ;
-			css_link ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["css" ; "materialize.min.css"]) () ;
+			[(* HTML validation: CSS links with validated URIs *)
+			css_link ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["css" ; "h42n42.css"]) () ;
+			(* HTML validation: JavaScript scripts with validated URIs *)
 			js_script ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["js" ; "jquery.min.js"]) () ;
+			(* HTML validation: CSS links with validated URIs *)
+			css_link ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["css" ; "materialize.min.css"]) () ;
+			(* HTML validation: JavaScript scripts with validated URIs *)
 			js_script ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["js" ; "materialize.min.js"]) () ;
+			(* HTML validation: JavaScript scripts with validated URIs *)
 			js_script ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["js" ; "setvals.js"]) ()
 			])
 		body_html

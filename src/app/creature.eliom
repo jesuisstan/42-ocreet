@@ -85,8 +85,8 @@ let update_size creature =
 	if creature.size <> new_size then (
 		creature.size <- new_size;
 		let size_str = new_size |> string_of_float |> Js.string in
-		ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |])
-	)
+				ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |])
+ 	)
 
 let next_coords creature =
 	let deg_to_rad deg =
