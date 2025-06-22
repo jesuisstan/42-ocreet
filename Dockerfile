@@ -1,5 +1,5 @@
 # Use an official OCaml runtime as a parent image
-FROM ocaml/opam:ubuntu-23.04-ocaml-4.14
+FROM ocaml/opam:ubuntu-22.04-ocaml-4.14
 
 # Set the working directory in the container
 WORKDIR /home/opam/app
