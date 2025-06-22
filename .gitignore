@@ -8,13 +8,14 @@
 *.cmxs
 *.cmxa
 
-# ocamlbuild working directory
+# ocamlbuild working directories and files
 _build/
 _client/
 _server/
 _deps/
 static/
 .depend
+h42n42.conf
 
 # ocamlbuild targets
 *.byte
