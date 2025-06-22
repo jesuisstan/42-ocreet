@@ -88,28 +88,9 @@ let game_over =
 
 let board_container =
 	(* HTML validation: board container with border elements and proper structure *)
-	div ~a:[
-		a_class ["board-container"] ;
-		a_style ("width:" ^ string_of_int (Config.board_width + 40) ^ "px;" ^
-							"height:" ^ string_of_int (Config.board_height + 40) ^ "px;")
-	] [
+	div ~a:[a_class ["board-container"]] [
 		game_over ;
-		div ~a:[
-			a_class ["hide-border" ; "top-bottom-border"]
-		] [] ;
-		div ~a:[
-			a_class ["hide-border" ; "left-right-border"] ;
-			a_style ("height:" ^ string_of_int Config.board_height ^ "px;")
-		] [] ;
-		creature_container ;
-		div ~a:[
-			a_class ["hide-border" ; "left-right-border"] ;
-			a_style ("height:" ^ string_of_int Config.board_height ^ "px;")
-		] [] ;
-		div ~a:[
-			a_class ["hide-border" ; "top-bottom-border"] ;
-			a_style ("margin-top:" ^ string_of_int Config.board_height ^ "px;")
-		] []
+		creature_container
 	]
 
 let start_button =
@@ -184,14 +165,14 @@ let agenda_container =
 let main_content =
 	(* HTML validation: main content container with proper layout structure *)
 	div ~a:[a_class ["main-content"]] [
-		board_container;
-		agenda_container
+		agenda_container;
+		board_container
 	]
 
 let body_html =
 	(* HTML validation: body element with proper heading hierarchy *)
 	(body [
-		h1 [txt "OCREET GAME"] ;
+		h1 [txt "OCreet GAME"] ;
 		main_content
 	])
 
@@ -199,7 +180,7 @@ let make () =
 	(* HTML validation: complete HTML document structure with head and body *)
 	html
 		(* HTML validation: head element with proper meta tags and resource links *)
-		(head (title (txt "OCREET GAME"))
+		(head (title (txt "OCreet GAME"))
 			[(* HTML validation: Google Fonts link for modern typography *)
 			css_link ~uri:(Eliom_content.Html.D.uri_of_string (fun () -> "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap")) () ;
 			(* HTML validation: CSS links with validated URIs *)

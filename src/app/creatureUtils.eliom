@@ -23,19 +23,19 @@ let get_creature_size creature =
 	creature.size
 
 let get_creature_relative_coords x y =
-	let cont_x, cont_y = get_elt_coords (Utils.elt_to_dom_elt ~%(Page.creature_container)) in
-	(x -. cont_x, y -. cont_y)
+	(* Since creatures are now positioned relative to container, 
+	   we can use the coordinates directly *)
+	(x, y)
 
 let get_creature_absolute_coords x y =
-	let cont_x, cont_y = get_elt_coords (Utils.elt_to_dom_elt ~%(Page.creature_container)) in
-	(cont_x +. x, cont_y +. y)
+	(* Since creatures are now positioned relative to container, 
+	   we can use the coordinates directly *)
+	(x, y)
 
 let actual_move_creature creature x_float y_float =
-	let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
 	(* Fix positioning: use integer pixel values to avoid rendering issues *)
 	let x = Js.string (string_of_int (int_of_float x_float) ^ "px") in
-	let scroll_top = Js.Unsafe.get body (Js.string "scrollTop") in
-	let y = Js.string (string_of_int (int_of_float (y_float +. float_of_int scroll_top)) ^ "px") in
+	let y = Js.string (string_of_int (int_of_float y_float) ^ "px") in
 	let style = Js.Unsafe.get creature.dom_elt (Js.string "style") in
 	Js.Unsafe.set style (Js.string "left") x ;
 	Js.Unsafe.set style (Js.string "top") y ;
@@ -50,11 +50,9 @@ let move_creature creature new_x new_y =
 		else if value > high then high
 		else value
 	in
-	let x, y = get_creature_relative_coords new_x new_y in
 	let offset = get_creature_size creature in
-	let x = _limit_by_borders x 0.0 (float_of_int Config.board_width -. offset) in
-	let y = _limit_by_borders y 0.0 (float_of_int Config.board_height -. offset) in
-	let x, y = get_creature_absolute_coords x y in
+	let x = _limit_by_borders new_x 0.0 (float_of_int Config.board_width -. offset) in
+	let y = _limit_by_borders new_y 0.0 (float_of_int Config.board_height -. offset) in
 	actual_move_creature creature x y
 
 let move_creature_bounce creature x y =
@@ -71,7 +69,6 @@ let move_creature_bounce creature x y =
 	( if y +. b_size >= float_of_int Config.board_height then
 		update_rotation creature (360 - creature.rotation)
 	) ;
-	let x, y = get_creature_absolute_coords x y in
 	move_creature creature x y
 
 ]

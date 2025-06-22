@@ -54,8 +54,20 @@ and start_game () =
 		dragend = Creature.handle_creature_dragend
 	} in
 	let move creature x y =
-		let x = x -. (CreatureUtils.get_creature_size creature /. 2.0) |> int_of_float |> float_of_int in
-		let y = y -. (CreatureUtils.get_creature_size creature /. 2.0) |> int_of_float |> float_of_int in
+		(* Convert cursor coordinates to container coordinates, accounting for scaling *)
+		let board_container = Utils.elt_to_dom_elt ~%(Page.board_container) in
+		let board_rect = Js.Unsafe.meth_call board_container "getBoundingClientRect" [||] in
+		let board_left = Js.Unsafe.get board_rect (Js.string "left") in
+		let board_top = Js.Unsafe.get board_rect (Js.string "top") in
+		(* Calculate the scale factor by comparing board container size to original size *)
+		let board_width = Js.Unsafe.get board_rect (Js.string "width") in
+		let scale_factor = board_width /. float_of_int (Config.board_width + 40) in
+		(* Convert cursor position to container coordinates *)
+		let container_x = (x -. board_left) /. scale_factor in
+		let container_y = (y -. board_top) /. scale_factor in
+		(* Center the creature under the cursor *)
+		let x = container_x -. (CreatureUtils.get_creature_size creature /. 2.0) in
+		let y = container_y -. (CreatureUtils.get_creature_size creature /. 2.0) in
 		CreatureUtils.move_creature creature x y
 	in
 	let set_dragging_status creature status =

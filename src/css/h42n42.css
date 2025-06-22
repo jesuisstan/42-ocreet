@@ -41,6 +41,19 @@ span.value {
   margin-top: 15px;
   font-weight: 500;
   letter-spacing: 0.025em;
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.start-game:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
 
 .reset-game {
@@ -48,25 +61,48 @@ span.value {
   margin-left: 10px;
   font-weight: 500;
   letter-spacing: 0.025em;
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+}
+
+.reset-game:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
 }
 
 .btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
+  transform: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
 .all-input-parent {
   width: 100%;
   max-width: 600px;
-  margin-top: 42px;
-  margin-bottom: 42px;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .input-parent {
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   font-weight: 500;
+}
+
+.input-parent:last-child {
+  margin-bottom: 0;
 }
 
 .rangeparent {
@@ -79,12 +115,18 @@ span.value {
 }
 
 .agenda {
-  margin-top: 42px;
+  margin: 0;
   padding-left: 42px;
   padding-right: 42px;
   font-size: 18px;
   font-weight: 400;
   line-height: 1.7;
+  min-width: 300px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(5px);
 }
 
 .game-over-animation {
@@ -132,37 +174,107 @@ span.value {
 
 .board-container {
   flex-shrink: 0;
+  transform-origin: top left;
+  transition: transform 0.3s ease-in-out;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+/* Responsive scaling for game board */
+@media (max-width: 1100px) {
+  .board-container {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 1000px) {
+  .board-container {
+    transform: scale(0.8);
+  }
+}
+
+@media (max-width: 900px) {
+  .board-container {
+    transform: scale(0.7);
+  }
+}
+
+@media (max-width: 800px) {
+  .board-container {
+    transform: scale(0.6);
+  }
+}
+
+@media (max-width: 700px) {
+  .board-container {
+    transform: scale(0.5);
+  }
+}
+
+@media (max-width: 600px) {
+  .board-container {
+    transform: scale(0.4);
+  }
+}
+
+/* Adjust main content layout for smaller screens */
+@media (max-width: 1100px) {
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 20px;
+  }
+
+  .agenda-container {
+    align-items: center;
+    min-width: auto;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .agenda {
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 1600px) {
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .creature-container {
   background-color: #eee;
   float: left;
   box-shadow: inset 0px 0px 8px 0px #25292e;
-}
-
-.hide-border {
   position: relative;
-  background-color: #faf8ef;
-  z-index: 2;
-}
-
-.left-right-border {
-  width: 20px;
-  float: left;
-}
-
-.top-bottom-border {
-  width: 100%;
-  height: 20px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .extreme {
   width: 100%;
   box-shadow: inset 0px 0px 8px 0px #000000;
+  border-radius: 4px;
 }
 
 .hospital {
   background-color: #c2ecb3;
+  border-radius: 4px;
 }
 
 .hospital-image {
@@ -171,6 +283,7 @@ span.value {
 
 .river {
   background-color: #b75e5e;
+  border-radius: 4px;
 }
 
 .river-single {
@@ -192,18 +305,15 @@ span.value {
   margin-top: 42px;
   align-items: flex-start;
   padding: 0 42px;
-}
-
-@media (max-width: 1200px) {
-  .main-content {
-    flex-direction: column;
-    align-items: center;
-  }
+  justify-content: center;
 }
 
 .agenda-container {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  min-width: 350px;
+  max-width: 600px;
+  gap: 40px;
 }

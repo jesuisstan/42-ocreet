@@ -174,7 +174,6 @@ let make_creature ?fadein:(fadein=false) start_time dragging_handler =
 	} in
 	let rand_x = Random.float (float_of_int Config.board_width) in
 	let rand_y = Random.float (float_of_int Config.board_height) in
-	let rand_x, rand_y = CreatureUtils.get_creature_absolute_coords rand_x rand_y in
 	CreatureUtils.update_rotation creature (Utils.random_rotation ()) ;
 	CreatureUtils.move_creature creature rand_x rand_y ;
 	Dragging.make_draggable dragging_handler creature ;
