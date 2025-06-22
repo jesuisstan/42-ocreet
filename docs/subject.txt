@@ -1,0 +1,90 @@
+Introduction
+For millenia, Creatures have lived in a peaceful land bordered by a river. Unfortunately,
+the river has been polluted by H42N42, a deadly and very infectious virus for some time.
+The Creatures will not survive without your assistance! Your goal will be to help them
+stay away from the river and to bring the sick ones to the hospital where they will be
+healed so they don’t contaminate the others.
+In this project, you will write an interactive simulator of this Creature world with a
+Web UI written in OCaml on the client side.
+
+Objectives
+Ocsigen allows you to manage every aspect of Web app programming, and to create
+client-server websites and applications. For a gentle start, this project will help you
+discover client-side programming with the library Eliom and the compiler Js_of_ocaml,
+and will teach you to:
+1. Run an OCaml program in a web browser thanks to the Ocsigen compiler. Js_of_ocaml;
+2. Statically validate the HTML pages that you generate to prevent your program from
+creating invalid pages;
+3. interact with the browser’s DOM and call Javascript methods thanks to the OCaml
+program;
+4. program handlers for mouse events;
+5. program cooperative threads in monadic style with Ocsigen Lwt.
+
+General instructions
+The project will be entirely programmed with the latest version of OCaml, the Js_of_ocaml
+compiler and the Eliom library of the Ocsigen project. You will also need the latest ver-
+sion available.
+You will find the Ocsigen documentation on the project website. Take the time to
+read the tutorials before starting.
+• Each Creet must be commanded by a Lwt thread.
+• It will be displayed as a DOM element (a <div> or <img> for instance).
+• Mouse events must be programmed with the Lwt_js_event module of Js_of_ocaml.
+You will find examples of this module in tutorials on the Ocsigen website.
+Advice:
+• Keep your browser debugging tools handy;
+• Read the Ocsigen tutorials.
+
+Mandatory part
+Creets must move randomly on a rectangular space of the browser’s window, bordered
+by a toxic river on top and a hospital where the sick Creets will get healed on the bottom.
+Unlucky Creets that will touch the river will get sick. If so, they change color, become
+contagious and contaminate the ones they touch with a probability.
+The goal of the game is to last as long as possible before all the unlucky Creets get
+contaminated. When this happens, the game is over.
+• Creets reproduce spontaneously as long as one healthy Creet is left. As long as
+they stay healthy, they never die.
+• User must be able to grab-move Creets with the mouse to keep them away from
+the river and take the sick ones to the hospital.
+• A sick Creet that randomly touches the hospital won’t be healed. Only the ones
+the user has taken to the hospital will be.
+• When a Creet is grabbed by the user, it becomes “invulnerable” and cannot be
+contaminated if it’s healthy.
+• A Creet moves in straight lines but might randomly change direction. These unex-
+pected changes must not happen too often to help the player plan the Creets’ path,
+but still create surprise somehow.
+• A Creet that touches the edges of the game area rebounds realistically, whichever
+edge it is.
+• A Creet that gets contaminated instantly changes color and gets 15% slower.
+• A contaminated Creet that touches a healthy Creet has a 2% risk of contaminating
+it at each iteration. There is no collision ("no rebound"); Creets walk over each
+other.
+• A Creet that gets sick has a 10% risk of becoming berserk! In that case, the Creet’s
+color changes from the contaminated one, and its diameter slowly grows until it has
+quadrupled by the end of its life, making it more likely to contaminate others, etc.
+• Also, a Creet that gets contaminated has a 10% risk of becoming mean! When
+this happens, the Creet gets a different color from the contaminated Creets and the
+Berserks. It shrinks 15% smaller than its regular size but starts running after the
+other healthy Creets to contaminate them willingly! Nasty little Creet!
+• A contaminated Creet cannot be both Berserk and mean.
+• Because of the panic, Creets accelerate in time so the difficulty level increases along
+until the player gets overwhelmed ... and loses. You’re free to set the balance as
+you see fit. The game should be very easy at first and grow harder with time. The
+player should feel confident in the beginning, until the game turns into a nightmare
+demanding relentless clicking skills.
+• You will choose the number of Creets according to the size you will give them to
+offer a balanced playability and a clear display. Very small Creets, for instance,
+would probably make the game a little dull.
+• You can adapt the instructed probabilities if and only if you feel like it will help
+the balance of the game without changing its nature.
+• When no living or healthy Creet is left, the game stops with a displayed GAME
+OVER message.
+
+Bonus part
+When you committed yourself to a project and you’re happy with the result, it’s only
+natural to want to keep going! Of course, the bonus part will count only if the mandatory
+part has been thoroughly achieved.
+Here is a list of bonus ideas for this project:
+• Try to make your game graphically pleasant;
+• Implement a way to control the simulation parameters with various forms, cursors
+or checkboxes on the page;
+• Optimize the collision detection between the Creets using a quadtree for instance.
