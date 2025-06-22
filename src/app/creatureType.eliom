@@ -16,7 +16,7 @@ open Js_of_ocaml
 type creature_state =
 	| StdSick of bool
 	| Berserk
-	| Naughty
+	| Insane
 
 type creature = {
 	elt:						Html_types.img D.elt ;

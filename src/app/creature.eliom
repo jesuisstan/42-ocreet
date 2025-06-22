@@ -17,7 +17,7 @@ let is_sick creature =
 	| StdSick false -> false
 	| StdSick true -> true
 	| Berserk -> true
-	| Naughty -> true
+	| Insane -> true
 
 let cure_creature creature =
 	if creature.state = Berserk then (
@@ -26,7 +26,7 @@ let cure_creature creature =
 			ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "width"); Js.Unsafe.inject size_str |])
 	) ;
 	creature.state <- StdSick false ;
-	ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string "./images/creature_sane.png") |]) ;
+	ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string "./images/creature_healthy.png") |]) ;
 	creature.got_infected_at <- None ;
 	creature.full_size_at <- None
 
@@ -38,7 +38,7 @@ let make_creature_sick creature =
 		| 0 -> creature.state <- Berserk ; creature.full_size_at <- Some (Utils.get_time () +. 7.0) ; "./images/creature_berserk.png"
 		(* Also, a Creet that gets contaminated has a 10% risk of becoming mean!
 		   It should shrink 15% smaller than its regular size. *)
-		| 1 -> creature.state <- Naughty ; "./images/creature_naughty.png"
+		| 1 -> creature.state <- Insane ; "./images/creature_insane.png"
 		| _ -> creature.state <- StdSick true ; "./images/creature_sick.png"
 	) in
 	ignore (Js.Unsafe.meth_call creature.dom_elt "setAttribute" [| Js.Unsafe.inject (Js.string "src"); Js.Unsafe.inject (Js.string img_src) |])
@@ -54,7 +54,7 @@ let update_speed creature =
 		| StdSick true -> 0.85 (* A Creet that gets contaminated instantly gets 15% slower. *)
 		| StdSick false -> 1.0
 		| Berserk -> 0.85
-		| Naughty -> 1.15 (* A 'mean' Creet runs 15% faster to contaminate others. *)
+		| Insane -> 1.15 (* A 'mean' Creet runs 15% faster to contaminate others. *)
 	in
 	(* Because of the panic, Creets accelerate in time so the difficulty level increases. *)
 	let time_speedup = (Utils.get_time () -. creature.start_time) /. 120.0 in
@@ -65,7 +65,7 @@ let update_size creature =
 	let base_size = float_of_int (Config.get_val "creature-size") in
 	let new_size =
 		match creature.state with
-		| Naughty ->
+		| Insane ->
 			(* It shrinks 15% smaller than its regular size. *)
 			base_size *. 0.85
 		| Berserk ->
@@ -103,7 +103,7 @@ let next_coords creature =
 
 let change_rotation_if_ok creature =
 	match creature.state with
-	| Naughty -> ()
+	| Insane -> ()
 	| _ -> (
 		if Utils.get_time () >= creature.change_rotation_at then (
 			CreatureUtils.update_rotation creature (Utils.random_rotation ()) ;
@@ -153,7 +153,7 @@ let make_creature ?fadein:(fadein=false) start_time dragging_handler =
 			a_class ["creature"] ;
 			a_style (if fadein then "animation: fadein 2s;" else "")
 		]
-		~src:(make_uri ~service:(Eliom_service.static_dir ()) ["images" ; "creature_sane.png"]) ()
+		~src:(make_uri ~service:(Eliom_service.static_dir ()) ["images" ; "creature_healthy.png"]) ()
 	in
 	let creature = {
 		elt = image ;

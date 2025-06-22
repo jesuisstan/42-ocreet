@@ -78,7 +78,7 @@ let replace_range_tagname range =
 			ignore (Js.Unsafe.meth_call hd "setAttribute" [| Js.Unsafe.inject (Js.string "value"); Js.Unsafe.inject (Js.string (string_of_int value)) |])
 		)
 
-let change_naughty_rotation creature existing_creatures =
+let change_insane_rotation creature existing_creatures =
 	let rad_to_deg rad =
 		rad *. (180.0 /. 3.14159265)
 	in
@@ -94,7 +94,7 @@ let change_naughty_rotation creature existing_creatures =
 			)
 		)
 	in
-	if creature.state = Naughty then (
+	if creature.state = Insane then (
 		match List.fold_left closer_creature None existing_creatures with
 		| None -> ()
 		| Some b -> (
@@ -121,7 +121,7 @@ let check_for_collisions_thread existing_creatures =
 		let quadtree = CreatureQuadtree.make width height in
 		let quadtree = List.fold_left (fun acc b -> CreatureQuadtree.add acc b) quadtree existing_creatures in
 		List.iter (make_sick_if_collision quadtree) existing_creatures ;
-		List.iter (fun x -> change_naughty_rotation x existing_creatures) existing_creatures;
+		List.iter (fun x -> change_insane_rotation x existing_creatures) existing_creatures;
 		Lwt.return_unit
 
 ]
