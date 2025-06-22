@@ -30,7 +30,6 @@ let stop_and_clear_creatures () =
 let rec wait_for_threads beginned_at attach_n_creatures =
 	Lwt.choose game.threads >>= fun () ->
 		game.threads <- List.filter (fun x -> Lwt.state x = Lwt.Sleep) game.threads;
-		game.threads <- (match game.threads with | [] -> [] | hd :: rest -> Lwt.cancel hd ; rest);
 		let living_creatures = List.filter (fun b -> not b.dead) game.creatures in
 		(* Game over only when all creatures are dead *)
 		if List.length living_creatures = 0 then exit_game ()
@@ -41,11 +40,20 @@ let rec wait_for_threads beginned_at attach_n_creatures =
 			) else (
 				let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
 				game.threads <- (Js_of_ocaml_lwt.Lwt_js.sleep wait_n_sec) :: game.threads;
-				let collisions = MainUtils.check_for_collisions_thread game.creatures in
-				game.threads <- collisions :: game.threads;
 				wait_for_threads beginned_at attach_n_creatures
 			)
 		)
+
+and collisions_and_chasing_thread () =
+	Js_of_ocaml_lwt.Lwt_js.sleep 0.1 >>= fun () ->
+		let living_creatures = List.filter (fun b -> not b.dead) game.creatures in
+		let width = float_of_int Config.board_width in
+		let height = float_of_int Config.board_height in
+		let quadtree = MainUtils.CreatureQuadtree.make width height in
+		let quadtree = List.fold_left (fun acc b -> MainUtils.CreatureQuadtree.add acc b) quadtree living_creatures in
+		List.iter (MainUtils.make_sick_if_collision quadtree) living_creatures ;
+		List.iter (fun x -> MainUtils.change_insane_rotation x living_creatures) living_creatures ;
+		collisions_and_chasing_thread ()
 
 and make_creatures_loop start nb attach_n_creatures =
 	let at_least_one_healthy = List.exists (fun b -> b.state = StdSick false) game.creatures in
@@ -56,8 +64,6 @@ and make_creatures_loop start nb attach_n_creatures =
 	game.threads <- List.rev_append new_threads game.threads;
 	let new_b_every = float_of_int (Config.get_val "new-creature-every") in
 	game.threads <- (Js_of_ocaml_lwt.Lwt_js.sleep new_b_every) :: game.threads;
-	let collisions = MainUtils.check_for_collisions_thread game.creatures in
-	game.threads <- collisions :: game.threads;
 	wait_for_threads (Utils.get_time ()) attach_n_creatures
 
 and start_game () =
@@ -99,6 +105,7 @@ and start_game () =
 	let dragging_handler = Dragging.make_handler events_cbs move set_dragging_status get_dom_elt in
 	let attach_n_creatures = Creature.make_creatures_and_attach start_time dragging_handler container in
 	let nb_creatures = (Config.get_val "starting-number-of-creatures") in
+	Lwt.async collisions_and_chasing_thread;
 	make_creatures_loop true nb_creatures attach_n_creatures
 
 and reset_game () =

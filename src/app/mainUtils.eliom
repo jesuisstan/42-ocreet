@@ -114,14 +114,4 @@ let make_sick_if_collision quadtree creature =
 		| _ -> ()
 	)
 
-let check_for_collisions_thread existing_creatures =
-	Js_of_ocaml_lwt.Lwt_js.sleep 0.1 >>= fun () ->
-		let width = float_of_int Config.board_width in
-		let height = float_of_int Config.board_height in
-		let quadtree = CreatureQuadtree.make width height in
-		let quadtree = List.fold_left (fun acc b -> CreatureQuadtree.add acc b) quadtree existing_creatures in
-		List.iter (make_sick_if_collision quadtree) existing_creatures ;
-		List.iter (fun x -> change_insane_rotation x existing_creatures) existing_creatures;
-		Lwt.return_unit
-
 ]
