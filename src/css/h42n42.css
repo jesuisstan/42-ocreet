@@ -31,6 +31,17 @@ span.value {
   margin-top: 15px;
 }
 
+.reset-game {
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+.btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .all-input-parent {
   width: 100%;
   max-width: 600px;

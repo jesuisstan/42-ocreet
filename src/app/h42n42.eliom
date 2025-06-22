@@ -45,6 +45,9 @@ and start_game () =
 	let container = Utils.elt_to_dom_elt ~%(Page.creature_container) in
 	MainUtils.clear_game_board container ;
 	MainUtils.update_config () ;
+	(* Disable start button and enable reset button during game *)
+	disable_start_button () ;
+	enable_reset_button () ;
 	let start_time = Utils.get_time () in
 	let events_cbs = Dragging.{
 		dragstart = (fun _ -> ()) ;
@@ -66,6 +69,37 @@ and start_game () =
 	let nb_creatures = (Config.get_val "starting-number-of-creatures") in
 	make_creatures_loop true nb_creatures [] [] attach_n_creatures
 
+and reset_game () =
+	(* Reload the page to reset everything *)
+	Js.Unsafe.meth_call (Js.Unsafe.get Js.Unsafe.global (Js.string "location")) "reload" [| |]
+
+and disable_start_button () =
+	let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
+	let classes = Js.to_string (Js.Unsafe.get start_button (Js.string "className")) in
+	Js.Unsafe.set start_button (Js.string "className") (Js.string (classes ^ " disabled"))
+
+and enable_start_button () =
+	let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
+	let classes = Js.to_string (Js.Unsafe.get start_button (Js.string "className")) in
+	let classes = String.map (fun c -> c) classes in
+	let classes = if String.contains classes 'd' && String.contains classes 'i' && String.contains classes 's' && String.contains classes 'a' && String.contains classes 'b' && String.contains classes 'l' && String.contains classes 'e' then
+		String.sub classes 0 (String.length classes - 9) (* Remove " disabled" *)
+	else classes in
+	Js.Unsafe.set start_button (Js.string "className") (Js.string classes)
+
+and disable_reset_button () =
+	let reset_button = Utils.elt_to_dom_elt ~%(Page.reset_button) in
+	let classes = Js.to_string (Js.Unsafe.get reset_button (Js.string "className")) in
+	Js.Unsafe.set reset_button (Js.string "className") (Js.string (classes ^ " disabled"))
+
+and enable_reset_button () =
+	let reset_button = Utils.elt_to_dom_elt ~%(Page.reset_button) in
+	let classes = Js.to_string (Js.Unsafe.get reset_button (Js.string "className")) in
+	let classes = if String.contains classes 'd' && String.contains classes 'i' && String.contains classes 's' && String.contains classes 'a' && String.contains classes 'b' && String.contains classes 'l' && String.contains classes 'e' then
+		String.sub classes 0 (String.length classes - 9) (* Remove " disabled" *)
+	else classes in
+	Js.Unsafe.set reset_button (Js.string "className") (Js.string classes)
+
 and init_client restart =
 	try
 		Random.self_init () ;
@@ -73,8 +107,9 @@ and init_client restart =
 		let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
 		let ranges = Js.Unsafe.meth_call body "querySelectorAll" [| Js.Unsafe.inject (Js.string "span.rangeparent") |] in
 		List.iter MainUtils.replace_range_tagname (Dom.list_of_nodeList ranges) ;
+		
+		(* Initialize start button *)
 		let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
-		(* Simple click handler using DOM events *)
 		Js.Unsafe.set start_button (Js.string "onclick") 
 			(Js.Unsafe.callback (fun () -> 
 				try
@@ -84,6 +119,20 @@ and init_client restart =
 					let console = Js.Unsafe.get Js.Unsafe.global (Js.string "console") in
 					ignore (Js.Unsafe.meth_call console "log" [| Js.Unsafe.inject (Js.string ("Error in start_game: " ^ (Printexc.to_string e))) |])
 			));
+		
+		(* Initialize reset button - initially disabled *)
+		let reset_button = Utils.elt_to_dom_elt ~%(Page.reset_button) in
+		disable_reset_button () ;
+		Js.Unsafe.set reset_button (Js.string "onclick") 
+			(Js.Unsafe.callback (fun () -> 
+				try
+					reset_game ()
+				with 
+				| e -> 
+					let console = Js.Unsafe.get Js.Unsafe.global (Js.string "console") in
+					ignore (Js.Unsafe.meth_call console "log" [| Js.Unsafe.inject (Js.string ("Error in reset_game: " ^ (Printexc.to_string e))) |])
+			));
+		
 		Lwt.return_unit
 	with 
 	| e -> 
@@ -94,6 +143,9 @@ and init_client restart =
 and exit_game () =
 	let container = Utils.elt_to_dom_elt ~%(Page.creature_container) in
 	MainUtils.add_game_over_css container ;
+	(* Re-enable start button and disable reset button when game ends *)
+	enable_start_button () ;
+	disable_reset_button () ;
 	Js_of_ocaml_lwt.Lwt_js.sleep 1.0 >>= fun () ->
 		let game_over = Utils.elt_to_dom_elt ~%(Page.game_over) in
 		let classes = Js.to_string (Js.Unsafe.get game_over (Js.string "className")) in

@@ -116,6 +116,10 @@ let start_button =
 	(* HTML validation: button div with proper class structure *)
 	div ~a:[a_class ["btn start-game"]] [txt "Start game"]
 
+let reset_button =
+	(* HTML validation: button div with proper class structure *)
+	div ~a:[a_class ["btn reset-game"]] [txt "Reset game"]
+
 let first_input_parent =
 	(* HTML validation: form inputs with proper types and attributes *)
 	div ~a:[a_class ["input-parent"]] [
@@ -154,7 +158,8 @@ let third_input_parent =
 			(* HTML validation: Form.input validates input_type and form type *)
 			Form.input ~a:[a_id "life-time-after-infection"] ~input_type:`Range Form.string
 		] ;
-		start_button
+		start_button ;
+		reset_button
 	]
 
 let form = 
