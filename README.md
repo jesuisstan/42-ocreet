@@ -42,68 +42,65 @@ In this browser game, you help a population of creatures (_Creets_) survive a de
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-This guide will walk you through setting up the development environment and running the project locally.
-
-### 1. Prerequisites
-
-Before you begin, ensure you have the following installed on your system. The setup script will handle the rest.
-
-- `git`
-- `curl`
-- `sudo` access
-- A Debian-based OS (like Ubuntu) is recommended for the scripts to work seamlessly.
-
-### 2. Environment Setup
-
-The project includes a convenient script to set up the entire OCaml development environment. Run it from the project root:
-
-```bash
-./scripts/install_ocaml_4.14.sh
-```
-
-This script automates the full installation process:
-
-- Installs **OPAM**, the OCaml package manager.
-- Configures a local **OCaml 4.14.1** environment (`switch`).
-- Installs necessary system libraries (`libev`, `pkg-config`, etc.).
-- Installs all required OCaml packages, including:
-  - The **Ocsigen** framework (`Eliom`, `Ocsigen-server`)
-  - The **Js_of_ocaml** compiler and its preprocessor (`-ppx`)
-  - The **Lwt** monadic concurrency library
-
-> **Note**: After the script finishes, you may need to restart your terminal or source your shell's configuration file (e.g., `source ~/.zshrc` or `source ~/.bashrc`) to ensure the `opam` environment is active.
-
-### 3. Build & Run
-
-Once the environment is set up, a single command builds the project and starts the server:
+### One-command Setup & Run:
 
 ```bash
 ./scripts/setup.sh
 ```
 
-This script is a wrapper that cleans old artifacts, builds the source, and runs the application.
+This will automatically:
 
-You can then view the game in your browser at: **http://localhost:8080**
+1. Clean up old build files
+2. Rename project from h42n42 to 42-ocreet
+3. Build from source
+4. Start the server
+
+Then open your browser at: **http://localhost:8080**
 
 ---
 
-## 🛠️ Individual Commands
+## 📋 Manual Commands
 
-If you prefer to run the steps manually:
+### Prerequisites
 
 ```bash
-# Clean all build artifacts
-./scripts/clean.sh
+# Install system dependencies (Ubuntu/Debian)
+sudo apt install ocaml opam git m4 bubblewrap pkg-config \
+    libev-dev libssl-dev libsqlite3-dev libgdbm-dev
 
-# Build the project from source (after setup)
+# Setup OCaml environment
+opam init --bare --disable-sandboxing
+opam switch create ocreet-4.14.1 4.14.1
+eval $(opam env)
+
+# Install OCaml packages
+opam install eliom js_of_ocaml js_of_ocaml-ppx js_of_ocaml-lwt \
+             lwt lwt_ppx ocsigenserver ocsipersist-dbm dbm
+```
+
+### Build & Run Manually:
+
+```bash
+# 1. Clean up and prepare project
+./scripts/cleanup.sh
+./scripts/update_content.sh
+
+# 2. Build from source
 ./scripts/build.sh
 
-# Run the server (after building)
+# 3. Start server
 ./scripts/run.sh
+```
 
-# A typical development cycle: clean and rebuild
+### Other Useful Commands:
+
+```bash
+# Clean build artifacts (keep source)
+./scripts/clean.sh
+
+# Rebuild after changes
 ./scripts/clean.sh && ./scripts/build.sh
 ```
 
