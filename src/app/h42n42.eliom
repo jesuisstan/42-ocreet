@@ -51,8 +51,8 @@ and start_game () =
 		dragend = Creature.handle_creature_dragend
 	} in
 	let move creature x y =
-		let x = x -. (CreatureUtils.get_creature_size creature /. 2.0) in
-		let y = y -. (CreatureUtils.get_creature_size creature /. 2.0) in
+		let x = x -. (CreatureUtils.get_creature_size creature /. 2.0) |> int_of_float |> float_of_int in
+		let y = y -. (CreatureUtils.get_creature_size creature /. 2.0) |> int_of_float |> float_of_int in
 		CreatureUtils.move_creature creature x y
 	in
 	let set_dragging_status creature status =

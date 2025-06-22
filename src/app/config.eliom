@@ -9,7 +9,7 @@ let extremes_height = 71
 let vals = Hashtbl.create ~random:true 10
 
 let set_std_vals () =
-	Hashtbl.add vals "creature-size" (51, 30, 100) ;
+	Hashtbl.add vals "creature-size" (70, 30, 121) ;
 	Hashtbl.add vals "creature-speed" (100, 30, 300) ;
 	Hashtbl.add vals "starting-number-of-creatures" (5, 2, 21) ;
 	Hashtbl.add vals "new-creature-every" (8, 4, 42) ;

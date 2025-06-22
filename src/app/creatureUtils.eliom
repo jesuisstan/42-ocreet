@@ -1,4 +1,3 @@
-
 [%%server
 
 (* Server-side placeholder - all functions are client-side only *)
@@ -33,9 +32,10 @@ let get_creature_absolute_coords x y =
 
 let actual_move_creature creature x_float y_float =
 	let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
-	let x = Js.string (string_of_float x_float ^ "px") in
+	(* Fix positioning: use integer pixel values to avoid rendering issues *)
+	let x = Js.string (string_of_int (int_of_float x_float) ^ "px") in
 	let scroll_top = Js.Unsafe.get body (Js.string "scrollTop") in
-	let y = Js.string (string_of_float (y_float +. float_of_int scroll_top) ^ "px") in
+	let y = Js.string (string_of_int (int_of_float (y_float +. float_of_int scroll_top)) ^ "px") in
 	let style = Js.Unsafe.get creature.dom_elt (Js.string "style") in
 	Js.Unsafe.set style (Js.string "left") x ;
 	Js.Unsafe.set style (Js.string "top") y ;
