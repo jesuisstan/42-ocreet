@@ -11,38 +11,56 @@ open CreatureType
 
 open Js_of_ocaml
 
-let rec wait_for_threads beginned_at threads existing_creatures attach_n_creatures =
-	Lwt.choose threads >>= fun () ->
-		Lwt.return (List.filter (fun x -> Lwt.state x = Lwt.Sleep) threads) >>= fun threads ->
-			let threads = (match threads with | [] -> [] | hd :: rest -> Lwt.cancel hd ; rest) in
-			let living_creatures = List.filter (fun b -> not b.dead) existing_creatures in
-			let healthy_living_creatures = List.filter (fun c -> not (Creature.is_sick c)) living_creatures in
-			if List.length healthy_living_creatures = 0 then exit_game () else (
-				let new_b_every = float_of_int (Config.get_val "new-creature-every") in
-				if (Utils.get_time ()) -. beginned_at >= new_b_every then (
-					make_creatures_loop false 1 threads existing_creatures attach_n_creatures
-				) else (
-					let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
-					let threads = (Js_of_ocaml_lwt.Lwt_js.sleep wait_n_sec) :: threads in
-					let collisions = MainUtils.check_for_collisions_thread existing_creatures in
-					let threads = collisions :: threads in
-					wait_for_threads beginned_at threads existing_creatures attach_n_creatures 
-				)
-			)
+(* Game state management *)
+type game_state = {
+	mutable threads: unit Lwt.t list;
+	mutable creatures: creature list;
+}
+let game = { threads = []; creatures = [] }
 
-and make_creatures_loop start nb threads existing_creatures attach_n_creatures =
-	let at_least_one_healthy = List.exists (fun b -> b.state = StdSick false) existing_creatures in
+let stop_and_clear_creatures () =
+	List.iter Lwt.cancel game.threads;
+	let container = Utils.elt_to_dom_elt ~%(Page.creature_container) in
+	List.iter (fun c ->
+		try Dom.removeChild container c.dom_elt with _ -> ()
+	) game.creatures;
+	game.threads <- [];
+	game.creatures <- []
+
+let rec wait_for_threads beginned_at attach_n_creatures =
+	Lwt.choose game.threads >>= fun () ->
+		game.threads <- List.filter (fun x -> Lwt.state x = Lwt.Sleep) game.threads;
+		game.threads <- (match game.threads with | [] -> [] | hd :: rest -> Lwt.cancel hd ; rest);
+		let living_creatures = List.filter (fun b -> not b.dead) game.creatures in
+		let healthy_living_creatures = List.filter (fun c -> not (Creature.is_sick c)) living_creatures in
+		if List.length healthy_living_creatures = 0 then exit_game () else (
+			let new_b_every = float_of_int (Config.get_val "new-creature-every") in
+			if (Utils.get_time ()) -. beginned_at >= new_b_every then (
+				make_creatures_loop false 1 attach_n_creatures
+			) else (
+				let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
+				game.threads <- (Js_of_ocaml_lwt.Lwt_js.sleep wait_n_sec) :: game.threads;
+				let collisions = MainUtils.check_for_collisions_thread game.creatures in
+				game.threads <- collisions :: game.threads;
+				wait_for_threads beginned_at attach_n_creatures
+			)
+		)
+
+and make_creatures_loop start nb attach_n_creatures =
+	let at_least_one_healthy = List.exists (fun b -> b.state = StdSick false) game.creatures in
 	let nb = if start || at_least_one_healthy then nb else 0 in
 	let new_creatures = attach_n_creatures (not start) nb in
-	let existing_creatures = List.fold_left (fun acc b -> b::acc) existing_creatures new_creatures in
-	let threads = List.fold_left (fun acc b -> (Creature.creature_thread b)::acc) threads new_creatures in
+	game.creatures <- List.fold_left (fun acc b -> b::acc) game.creatures new_creatures;
+	let new_threads = List.map (fun b -> Creature.creature_thread b) new_creatures in
+	game.threads <- List.rev_append new_threads game.threads;
 	let new_b_every = float_of_int (Config.get_val "new-creature-every") in
-	let threads = (Js_of_ocaml_lwt.Lwt_js.sleep new_b_every) :: threads in
-	let collisions = MainUtils.check_for_collisions_thread existing_creatures in
-	let threads = collisions :: threads in
-	wait_for_threads (Utils.get_time ()) threads existing_creatures attach_n_creatures
+	game.threads <- (Js_of_ocaml_lwt.Lwt_js.sleep new_b_every) :: game.threads;
+	let collisions = MainUtils.check_for_collisions_thread game.creatures in
+	game.threads <- collisions :: game.threads;
+	wait_for_threads (Utils.get_time ()) attach_n_creatures
 
 and start_game () =
+	stop_and_clear_creatures ();
 	let container = Utils.elt_to_dom_elt ~%(Page.creature_container) in
 	MainUtils.clear_game_board container ;
 	MainUtils.update_config () ;
@@ -80,7 +98,7 @@ and start_game () =
 	let dragging_handler = Dragging.make_handler events_cbs move set_dragging_status get_dom_elt in
 	let attach_n_creatures = Creature.make_creatures_and_attach start_time dragging_handler container in
 	let nb_creatures = (Config.get_val "starting-number-of-creatures") in
-	make_creatures_loop true nb_creatures [] [] attach_n_creatures
+	make_creatures_loop true nb_creatures attach_n_creatures
 
 and reset_game () =
 	(* Reload the page to reset everything *)
@@ -89,29 +107,26 @@ and reset_game () =
 and disable_start_button () =
 	let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
 	let classes = Js.to_string (Js.Unsafe.get start_button (Js.string "className")) in
-	Js.Unsafe.set start_button (Js.string "className") (Js.string (classes ^ " disabled"))
+	if not (String.contains classes 'd') then
+		Js.Unsafe.set start_button (Js.string "className") (Js.string (classes ^ " disabled"))
 
 and enable_start_button () =
 	let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
 	let classes = Js.to_string (Js.Unsafe.get start_button (Js.string "className")) in
-	let classes = String.map (fun c -> c) classes in
-	let classes = if String.contains classes 'd' && String.contains classes 'i' && String.contains classes 's' && String.contains classes 'a' && String.contains classes 'b' && String.contains classes 'l' && String.contains classes 'e' then
-		String.sub classes 0 (String.length classes - 9) (* Remove " disabled" *)
-	else classes in
-	Js.Unsafe.set start_button (Js.string "className") (Js.string classes)
+	let new_classes = Str.replace_first (Str.regexp " disabled") "" classes in
+	Js.Unsafe.set start_button (Js.string "className") (Js.string new_classes)
 
 and disable_reset_button () =
 	let reset_button = Utils.elt_to_dom_elt ~%(Page.reset_button) in
 	let classes = Js.to_string (Js.Unsafe.get reset_button (Js.string "className")) in
-	Js.Unsafe.set reset_button (Js.string "className") (Js.string (classes ^ " disabled"))
+	if not (String.contains classes 'd') then
+		Js.Unsafe.set reset_button (Js.string "className") (Js.string (classes ^ " disabled"))
 
 and enable_reset_button () =
 	let reset_button = Utils.elt_to_dom_elt ~%(Page.reset_button) in
 	let classes = Js.to_string (Js.Unsafe.get reset_button (Js.string "className")) in
-	let classes = if String.contains classes 'd' && String.contains classes 'i' && String.contains classes 's' && String.contains classes 'a' && String.contains classes 'b' && String.contains classes 'l' && String.contains classes 'e' then
-		String.sub classes 0 (String.length classes - 9) (* Remove " disabled" *)
-	else classes in
-	Js.Unsafe.set reset_button (Js.string "className") (Js.string classes)
+	let new_classes = Str.replace_first (Str.regexp " disabled") "" classes in
+	Js.Unsafe.set reset_button (Js.string "className") (Js.string new_classes)
 
 and init_client restart =
 	try
@@ -154,6 +169,7 @@ and init_client restart =
 		Lwt.return_unit
 
 and exit_game () =
+	stop_and_clear_creatures ();
 	let container = Utils.elt_to_dom_elt ~%(Page.creature_container) in
 	MainUtils.add_game_over_css container ;
 	(* Re-enable start button and disable reset button when game ends *)

@@ -124,7 +124,7 @@ let second_input_parent =
 			(* HTML validation: Form.input validates input_type and form type *)
 			Form.input ~a:[a_id "starting-number-of-creatures"] ~input_type:`Range Form.string
 		] ;
-		txt "New creature every n second : ";
+		txt "New creature every N seconds: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
 			(* HTML validation: Form.input validates input_type and form type *)
 			Form.input ~a:[a_id "new-creature-every"] ~input_type:`Range Form.string

@@ -80,7 +80,7 @@ echo "🌐 Compiling client side..."
 for file in creatureType.eliom utils.eliom config.eliom dragging.eliom page.eliom quadtree.eliom creatureUtils.eliom creature.eliom mainUtils.eliom h42n42.eliom; do
     if [ -f "$file" ]; then
         echo "  Compiling $file (client)..."
-        js_of_eliom -c -ppx -package eliom.client -package js_of_ocaml-lwt "$file"
+        js_of_eliom -c -ppx -package eliom.client -package js_of_ocaml-lwt -package str "$file"
         if [ -f "${file%.eliom}.cmo" ]; then
             mv "${file%.eliom}.cmo" "_client/"
         fi
@@ -98,7 +98,7 @@ for file in creatureType.eliom utils.eliom config.eliom dragging.eliom page.elio
     fi
 done
 BIGSTRING_RUNTIME=$(find $(ocamlfind query bigstringaf) -name "runtime.js")
-js_of_eliom -o static/h42n42.js -ppx -package eliom.client -package js_of_ocaml-lwt -jsopt "$BIGSTRING_RUNTIME" $CLIENT_CMOS
+js_of_eliom -o static/h42n42.js -ppx -package eliom.client -package js_of_ocaml-lwt -package str -jsopt "$BIGSTRING_RUNTIME" $CLIENT_CMOS
 
 # Generate configuration file
 echo "⚙️  Generating configuration file..."
