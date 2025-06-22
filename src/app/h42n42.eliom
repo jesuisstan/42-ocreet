@@ -34,17 +34,17 @@ let rec wait_for_threads beginned_at attach_n_creatures =
 		let living_creatures = List.filter (fun b -> not b.dead) game.creatures in
 		let healthy_living_creatures = List.filter (fun c -> not (Creature.is_sick c)) living_creatures in
 		if List.length healthy_living_creatures = 0 then exit_game () else (
-			let new_b_every = float_of_int (Config.get_val "new-creature-every") in
-			if (Utils.get_time ()) -. beginned_at >= new_b_every then (
+					let new_b_every = float_of_int (Config.get_val "new-creature-every") in
+					if (Utils.get_time ()) -. beginned_at >= new_b_every then (
 				make_creatures_loop false 1 attach_n_creatures
-			) else (
-				let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
+					) else (
+											let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
 				game.threads <- (Js_of_ocaml_lwt.Lwt_js.sleep wait_n_sec) :: game.threads;
 				let collisions = MainUtils.check_for_collisions_thread game.creatures in
 				game.threads <- collisions :: game.threads;
 				wait_for_threads beginned_at attach_n_creatures
-			)
-		)
+					)
+				)
 
 and make_creatures_loop start nb attach_n_creatures =
 	let at_least_one_healthy = List.exists (fun b -> b.state = StdSick false) game.creatures in
@@ -135,6 +135,8 @@ and init_client restart =
 		let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
 		let ranges = Js.Unsafe.meth_call body "querySelectorAll" [| Js.Unsafe.inject (Js.string "span.rangeparent") |] in
 		List.iter MainUtils.replace_range_tagname (Dom.list_of_nodeList ranges) ;
+		(* Сall setVals() again to show value indicators immediately after page load	*)
+		ignore (Js.Unsafe.eval_string "setVals();");
 		
 		(* Initialize start button *)
 		let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
@@ -175,11 +177,11 @@ and exit_game () =
 	(* Re-enable start button and disable reset button when game ends *)
 	enable_start_button () ;
 	disable_reset_button () ;
-	let game_over = Utils.elt_to_dom_elt ~%(Page.game_over) in
-	let classes = Js.to_string (Js.Unsafe.get game_over (Js.string "className")) in
-	Js.Unsafe.set game_over (Js.string "className") (Js.string (classes ^ " " ^ "appear")) ;
-	let style = Js.Unsafe.get game_over (Js.string "style") in
-	Js.Unsafe.set style (Js.string "display") (Js.string "inherit") ;
+		let game_over = Utils.elt_to_dom_elt ~%(Page.game_over) in
+		let classes = Js.to_string (Js.Unsafe.get game_over (Js.string "className")) in
+		Js.Unsafe.set game_over (Js.string "className") (Js.string (classes ^ " " ^ "appear")) ;
+		let style = Js.Unsafe.get game_over (Js.string "style") in
+		Js.Unsafe.set style (Js.string "display") (Js.string "inherit") ;
 	Lwt.return_unit
 
 (* Auto-initialize client when page loads *)
