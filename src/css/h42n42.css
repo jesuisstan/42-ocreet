@@ -143,9 +143,10 @@ span.value {
   height: 175px;
   background-color: #f3bbbb;
   z-index: 2;
-  border-radius: 42px;
+  border-radius: 15px;
   text-align: center;
-  box-shadow: 10px 10px 15px 2px #25292e;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .appear {

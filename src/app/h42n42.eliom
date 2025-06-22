@@ -15,19 +15,20 @@ let rec wait_for_threads beginned_at threads existing_creatures attach_n_creatur
 	Lwt.choose threads >>= fun () ->
 		Lwt.return (List.filter (fun x -> Lwt.state x = Lwt.Sleep) threads) >>= fun threads ->
 			let threads = (match threads with | [] -> [] | hd :: rest -> Lwt.cancel hd ; rest) in
-			Lwt.return (List.filter (fun b -> not b.dead) existing_creatures) >>= fun existing_creatures ->
-				if List.length existing_creatures = 0 then exit_game () else (
-					let new_b_every = float_of_int (Config.get_val "new-creature-every") in
-					if (Utils.get_time ()) -. beginned_at >= new_b_every then (
-						make_creatures_loop false 1 threads existing_creatures attach_n_creatures
-					) else (
-											let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
+			let living_creatures = List.filter (fun b -> not b.dead) existing_creatures in
+			let healthy_living_creatures = List.filter (fun c -> not (Creature.is_sick c)) living_creatures in
+			if List.length healthy_living_creatures = 0 then exit_game () else (
+				let new_b_every = float_of_int (Config.get_val "new-creature-every") in
+				if (Utils.get_time ()) -. beginned_at >= new_b_every then (
+					make_creatures_loop false 1 threads existing_creatures attach_n_creatures
+				) else (
+					let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
 					let threads = (Js_of_ocaml_lwt.Lwt_js.sleep wait_n_sec) :: threads in
-						let collisions = MainUtils.check_for_collisions_thread existing_creatures in
-						let threads = collisions :: threads in
-						wait_for_threads beginned_at threads existing_creatures attach_n_creatures 
-					)
+					let collisions = MainUtils.check_for_collisions_thread existing_creatures in
+					let threads = collisions :: threads in
+					wait_for_threads beginned_at threads existing_creatures attach_n_creatures 
 				)
+			)
 
 and make_creatures_loop start nb threads existing_creatures attach_n_creatures =
 	let at_least_one_healthy = List.exists (fun b -> b.state = StdSick false) existing_creatures in
@@ -158,13 +159,12 @@ and exit_game () =
 	(* Re-enable start button and disable reset button when game ends *)
 	enable_start_button () ;
 	disable_reset_button () ;
-	Js_of_ocaml_lwt.Lwt_js.sleep 1.0 >>= fun () ->
-		let game_over = Utils.elt_to_dom_elt ~%(Page.game_over) in
-		let classes = Js.to_string (Js.Unsafe.get game_over (Js.string "className")) in
-		Js.Unsafe.set game_over (Js.string "className") (Js.string (classes ^ " " ^ "appear")) ;
-		let style = Js.Unsafe.get game_over (Js.string "style") in
-		Js.Unsafe.set style (Js.string "display") (Js.string "inherit") ;
-		Lwt.return ()
+	let game_over = Utils.elt_to_dom_elt ~%(Page.game_over) in
+	let classes = Js.to_string (Js.Unsafe.get game_over (Js.string "className")) in
+	Js.Unsafe.set game_over (Js.string "className") (Js.string (classes ^ " " ^ "appear")) ;
+	let style = Js.Unsafe.get game_over (Js.string "style") in
+	Js.Unsafe.set style (Js.string "display") (Js.string "inherit") ;
+	Lwt.return_unit
 
 (* Auto-initialize client when page loads *)
 let () = Eliom_client.onload (fun () -> Lwt.async (fun () -> init_client false))
