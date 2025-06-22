@@ -34,11 +34,11 @@ let rec wait_for_threads beginned_at attach_n_creatures =
 		(* Game over only when all creatures are dead *)
 		if List.length living_creatures = 0 then exit_game ()
 		else (
-			let new_b_every = float_of_int (Config.get_val "new-creature-every") in
-			if (Utils.get_time ()) -. beginned_at >= new_b_every then (
+					let new_b_every = float_of_int (Config.get_val "new-creature-every") in
+					if (Utils.get_time ()) -. beginned_at >= new_b_every then (
 				make_creatures_loop false 1 attach_n_creatures
-			) else (
-				let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
+					) else (
+											let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
 				game.threads <- (Js_of_ocaml_lwt.Lwt_js.sleep wait_n_sec) :: game.threads;
 				wait_for_threads beginned_at attach_n_creatures
 			)
