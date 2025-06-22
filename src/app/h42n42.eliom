@@ -32,19 +32,20 @@ let rec wait_for_threads beginned_at attach_n_creatures =
 		game.threads <- List.filter (fun x -> Lwt.state x = Lwt.Sleep) game.threads;
 		game.threads <- (match game.threads with | [] -> [] | hd :: rest -> Lwt.cancel hd ; rest);
 		let living_creatures = List.filter (fun b -> not b.dead) game.creatures in
-		let healthy_living_creatures = List.filter (fun c -> not (Creature.is_sick c)) living_creatures in
-		if List.length healthy_living_creatures = 0 then exit_game () else (
-					let new_b_every = float_of_int (Config.get_val "new-creature-every") in
-					if (Utils.get_time ()) -. beginned_at >= new_b_every then (
+		(* Game over only when all creatures are dead *)
+		if List.length living_creatures = 0 then exit_game ()
+		else (
+			let new_b_every = float_of_int (Config.get_val "new-creature-every") in
+			if (Utils.get_time ()) -. beginned_at >= new_b_every then (
 				make_creatures_loop false 1 attach_n_creatures
-					) else (
-											let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
+			) else (
+				let wait_n_sec = new_b_every -. ((Utils.get_time ()) -. beginned_at) in
 				game.threads <- (Js_of_ocaml_lwt.Lwt_js.sleep wait_n_sec) :: game.threads;
 				let collisions = MainUtils.check_for_collisions_thread game.creatures in
 				game.threads <- collisions :: game.threads;
 				wait_for_threads beginned_at attach_n_creatures
-					)
-				)
+			)
+		)
 
 and make_creatures_loop start nb attach_n_creatures =
 	let at_least_one_healthy = List.exists (fun b -> b.state = StdSick false) game.creatures in
