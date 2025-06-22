@@ -141,11 +141,11 @@ span.value {
   position: absolute;
   width: 400px;
   height: 175px;
-  background-color: #f3bbbb;
+  background-color: #d32f2f;
   z-index: 2;
   border-radius: 15px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
   backdrop-filter: blur(10px);
 }
 
@@ -283,7 +283,7 @@ span.value {
 }
 
 .river {
-  background-color: #b75e5e;
+  background-color: rgba(244, 67, 54, 0.15);
   border-radius: 4px;
 }
 
@@ -317,4 +317,93 @@ span.value {
   min-width: 350px;
   max-width: 600px;
   gap: 40px;
+}
+
+/* Theme color variables */
+:root {
+  --bg: #f4f4f7;
+  --fg: #23262b;
+  --card-bg: #e0e3ea;
+  --card-fg: #23262b;
+  --accent: #1976d2;
+  --card-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  --theme-btn-bg: #ffe066;
+  --theme-btn-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+body.theme-dark {
+  --bg: #181a1b;
+  --fg: #eee;
+  --card-bg: #23262b;
+  --card-fg: #eee;
+  --accent: #90caf9;
+  --card-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+  --theme-btn-bg: #2d3a4a;
+  --theme-btn-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+/* Card-like containers (agenda, sliders, game field) */
+.all-input-parent,
+.creature-container {
+  background: var(--card-bg) !important;
+  color: var(--card-fg) !important;
+  box-shadow: var(--card-shadow);
+  border-radius: 16px;
+}
+
+.agenda-container {
+  color: var(--card-fg) !important;
+  border-radius: 16px;
+}
+
+.board-container {
+  color: var(--card-fg) !important;
+  box-shadow: var(--card-shadow);
+  border-radius: 16px;
+}
+
+/* Theme toggle button styles */
+.theme-toggle-btn-container {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  z-index: 100;
+}
+.theme-toggle-btn {
+  background: var(--theme-btn-bg);
+  border: none;
+  border-radius: 50%;
+  box-shadow: var(--theme-btn-shadow);
+  cursor: pointer;
+  padding: 6px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.theme-toggle-btn img {
+  width: 28px;
+  height: 28px;
+  display: block;
+  transition: filter 0.3s;
+  /* Default: yellow tint for light theme */
+  filter: drop-shadow(0 0 2px #ffe066);
+}
+body.theme-dark .theme-toggle-btn img {
+  /* Blue tint for dark theme */
+  filter: invert(1) drop-shadow(0 0 2px #90caf9);
+}
+body.theme-dark .theme-toggle-btn {
+  background: var(--theme-btn-bg);
+}
+/* Ensure text on cards is always readable */
+.agenda-container p,
+.all-input-parent,
+.creature-container,
+.board-container {
+  color: var(--card-fg) !important;
 }

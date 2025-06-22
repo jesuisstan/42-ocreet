@@ -1,3 +1,25 @@
+document.addEventListener('DOMContentLoaded', function () {
+  setVals();
+
+  // Theme toggle logic
+  const themeBtn = document.querySelector('.theme-toggle-btn');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('theme-dark');
+      // Save theme to localStorage
+      localStorage.setItem(
+        'theme',
+        document.body.classList.contains('theme-dark') ? 'dark' : 'light'
+      );
+    });
+  }
+  // Restore theme on page load
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('theme-dark');
+  }
+});
+
+// setVals function for range value indicators
 const setVals = () => {
   $('input[type=range]').each(function (ind, inp) {
     inp.setAttribute('value', inp.value);

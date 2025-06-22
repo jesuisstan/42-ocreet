@@ -162,9 +162,16 @@ let agenda_container =
 		form
 	]
 
+let theme_toggle_button =
+	(* Theme toggle button with SVG icon and accessibility label *)
+	button ~a:[a_class ["theme-toggle-btn"]; a_user_data "aria-label" "Toggle color theme"] [
+		img ~alt:"Toggle theme" ~src:(make_uri ~service:(Eliom_service.static_dir ()) ["images"; "sun-moon.svg"]) ()
+	]
+
 let main_content =
-	(* HTML validation: main content container with proper layout structure *)
+	(* Add theme toggle button at the top right *)
 	div ~a:[a_class ["main-content"]] [
+		div ~a:[a_class ["theme-toggle-btn-container"]] [theme_toggle_button];
 		agenda_container;
 		board_container
 	]
@@ -192,6 +199,6 @@ let make () =
 			(* HTML validation: JavaScript scripts with validated URIs *)
 			js_script ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["js" ; "materialize.min.js"]) () ;
 			(* HTML validation: JavaScript scripts with validated URIs *)
-			js_script ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["js" ; "setvals.js"]) ()
+			js_script ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["js" ; "utils.js"]) ()
 			])
 		body_html
