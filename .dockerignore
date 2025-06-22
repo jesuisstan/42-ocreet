@@ -1,0 +1,9 @@
+Dockerfile
+.git
+.gitignore
+.cursor
+_build
+*.log
+h42n42.pid
+h42n42.conf
+README.md 
