@@ -200,7 +200,9 @@ let make () =
 	html
 		(* HTML validation: head element with proper meta tags and resource links *)
 		(head (title (txt "OCREET GAME"))
-			[(* HTML validation: CSS links with validated URIs *)
+			[(* HTML validation: Google Fonts link for modern typography *)
+			css_link ~uri:(Eliom_content.Html.D.uri_of_string (fun () -> "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap")) () ;
+			(* HTML validation: CSS links with validated URIs *)
 			css_link ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["css" ; "h42n42.css"]) () ;
 			(* HTML validation: JavaScript scripts with validated URIs *)
 			js_script ~uri:(make_uri ~service:(Eliom_service.static_dir ()) ["js" ; "jquery.min.js"]) () ;
