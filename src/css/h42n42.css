@@ -38,7 +38,6 @@ span.value {
 }
 
 .start-game {
-  margin-top: 15px;
   font-weight: 500;
   letter-spacing: 0.025em;
   background: linear-gradient(135deg, #4caf50, #45a049);
@@ -48,7 +47,7 @@ span.value {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
 
 .start-game:hover {
@@ -57,8 +56,6 @@ span.value {
 }
 
 .reset-game {
-  margin-top: 15px;
-  margin-left: 10px;
   font-weight: 500;
   letter-spacing: 0.025em;
   background: linear-gradient(135deg, #f44336, #d32f2f);
@@ -68,7 +65,7 @@ span.value {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
 }
 
 .reset-game:hover {
@@ -82,6 +79,13 @@ span.value {
   pointer-events: none;
   transform: none !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 42px;
+  margin-top: 42px;
 }
 
 .all-input-parent {
@@ -118,9 +122,8 @@ span.value {
   margin: 0;
   padding-left: 42px;
   padding-right: 42px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
-  line-height: 1.7;
   min-width: 300px;
   background: rgba(255, 255, 255, 0.6);
   padding: 25px;
@@ -175,12 +178,8 @@ span.value {
 
 .board-container {
   flex-shrink: 0;
-  transform-origin: top left;
+  transform-origin: top;
   transition: transform 0.3s ease-in-out;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   position: relative;
 }
@@ -304,7 +303,6 @@ span.value {
   display: flex;
   gap: 40px;
   margin-top: 42px;
-  align-items: flex-start;
   padding: 0 42px;
   justify-content: center;
 }
@@ -355,12 +353,6 @@ body {
 
 .agenda-container {
   color: var(--card-fg) !important;
-  border-radius: 16px;
-}
-
-.board-container {
-  color: var(--card-fg) !important;
-  box-shadow: var(--card-shadow);
   border-radius: 16px;
 }
 

@@ -29,7 +29,7 @@ const setVals = () => {
       indicator = document.createElement('span');
       indicator.className = 'range-value-indicator';
       indicator.style.cssText =
-        'float:right; margin-left:10px; min-width:2em; text-align:right; font-weight:bold;';
+        'float:right; margin-left:10px; min-width:2em; text-align:right; font-weight:bold; margin-top:-10px;';
       inp.parentNode.appendChild(indicator);
     }
     indicator.textContent = inp.value;

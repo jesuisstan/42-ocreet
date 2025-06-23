@@ -133,14 +133,14 @@ let second_input_parent =
 
 let third_input_parent =
 	(* HTML validation: form inputs with proper types and attributes *)
+	let buttons = div ~a:[a_class ["button-container"]] [start_button; reset_button] in
 	div ~a:[a_class ["input-parent"]] [
 		txt "Sickness time: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "thd-parent"] [
 			(* HTML validation: Form.input validates input_type and form type *)
 			Form.input ~a:[a_id "life-time-after-infection"] ~input_type:`Range Form.string
 		] ;
-		start_button ;
-		reset_button
+		buttons
 	]
 
 let form = 
