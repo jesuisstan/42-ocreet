@@ -42,56 +42,78 @@ In this browser game, you help a population of creatures (_Creets_) survive a de
 
 ---
 
-## 🚀 Quick Start
+## 🐳 Docker Quick Start
 
-### One-command Setup & Run:
+For a sandboxed, dependency-free environment, you can run the entire project inside Docker.
+
+### 1. Build the Docker Image
+
+This command builds the container image with all necessary dependencies.
 
 ```bash
-./scripts/setup.sh
+sudo docker build -t 42-ocreet .
 ```
 
-This will automatically:
+### 2. Run the Docker Container
 
-1. Clean up old build files
-2. Rename project from h42n42 to 42-ocreet
-3. Build from source
-4. Start the server
+This command starts the application. It will be accessible in your browser at **http://localhost:8080**.
 
-Then open your browser at: **http://localhost:8080**
+```bash
+sudo docker run -it -p 8080:8080 --rm --name ocreet-dev 42-ocreet
+```
 
 ---
 
-## 📋 Manual Commands
+## 📋 Manual Installation & Launch
 
-### Prerequisites
+Follow these steps for a manual setup from your terminal.
+
+### 1. Install Dependencies
+
+This script sets up your entire OCaml environment, including OPAM, the correct OCaml version (4.14.1), and all required packages. You only need to run this once.
 
 ```bash
-# Install system dependencies (Ubuntu/Debian)
-sudo apt install ocaml opam git m4 bubblewrap pkg-config \
-    libev-dev libssl-dev libsqlite3-dev libgdbm-dev
-
-# Setup OCaml environment
-opam init --bare --disable-sandboxing
-opam switch create ocreet-4.14.1 4.14.1
-eval $(opam env)
-
-# Install OCaml packages
-opam install eliom js_of_ocaml js_of_ocaml-ppx js_of_ocaml-lwt \
-             lwt lwt_ppx ocsigenserver ocsipersist-dbm dbm
+chmod +x ./scripts/install_ocaml_4.14.sh
+./scripts/install_ocaml_4.14.sh
 ```
 
-### Build & Run Manually:
+_You may be prompted for your `sudo` password to install system packages._
+
+### 2. Build and Run the Project
+
+This command compiles the source code and starts the development server.
 
 ```bash
-# 1. Clean up and prepare project
-./scripts/cleanup.sh
-./scripts/update_content.sh
+chmod +x ./scripts/dev.sh
+./scripts/dev.sh
+```
 
-# 2. Build from source
-./scripts/build.sh
+The server will then be available at **http://localhost:8080**.
 
-# 3. Start server
-./scripts/run.sh
+---
+
+## 📦 Docker Management Commands
+
+Here are some useful commands to manage your Docker images and containers.
+
+```bash
+# List running containers
+sudo docker ps
+
+# List all containers (including stopped)
+sudo docker ps -a
+
+# Stop the running container
+sudo docker stop ocreet-dev
+
+# List all Docker images
+sudo docker images
+
+# Remove the project's Docker image
+sudo docker rmi 42-ocreet
+
+# Clean up all unused containers, networks, and images (use with caution)
+sudo docker system prune -a
 ```
 
 ### Other Useful Commands:
@@ -142,18 +164,6 @@ This project demonstrates:
 4. **DOM manipulation**: Direct browser interaction from OCaml
 5. **Event handling**: Mouse events with Lwt_js_events
 6. **Game development**: Real-time simulation with collision detection
-
----
-
-## 🎯 42 School Requirements Met
-
-✅ **OCaml + Ocsigen framework**  
-✅ **Client-side execution** (Js_of_ocaml)  
-✅ **DOM manipulation** and **mouse events**  
-✅ **Lwt monadic concurrency**  
-✅ **Game mechanics**: infection, healing, movement, reproduction  
-✅ **Difficulty progression** and proper game loop  
-✅ **Bonus**: Quadtree optimization for collision detection
 
 ---
 

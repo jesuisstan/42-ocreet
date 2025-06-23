@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     bubblewrap \
     m4 \
     libsqlite3-dev \
+    libgdbm-dev \
     curl \
     expect \
     unzip \
@@ -42,6 +43,7 @@ RUN eval $(opam env) && \
     dune \
     eliom \
     ocsigenserver \
+    ocsipersist-dbm \
     js_of_ocaml \
     js_of_ocaml-ppx \
     tyxml \
