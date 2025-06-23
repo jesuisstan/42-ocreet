@@ -63,9 +63,9 @@ let replace_range_tagname range =
 	Js.Unsafe.set d (Js.string "className") (Js.string "range-field rangeparent") ;
 	let title = Js.Unsafe.get range (Js.string "title") in
 	let parent = ( match Js.to_string title with
-		| "fst-parent" -> Utils.elt_to_dom_elt ~%(Page.first_input_parent)
-		| "snd-parent" -> Utils.elt_to_dom_elt ~%(Page.second_input_parent)
-		| _ -> Utils.elt_to_dom_elt ~%(Page.third_input_parent)
+		| "fst-parent" -> Utils.elt_to_dom_elt ~%(Page.customization_input_one)
+		| "snd-parent" -> Utils.elt_to_dom_elt ~%(Page.customization_input_two)
+		| _ -> Utils.elt_to_dom_elt ~%(Page.customization_input_three)
 	) in
 	Dom.replaceChild parent d range ;
 	let inp = Dom.list_of_nodeList (Js.Unsafe.meth_call d "querySelectorAll" [| Js.Unsafe.inject (Js.string "input") |]) in

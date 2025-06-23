@@ -95,15 +95,15 @@ let board_container =
 
 let start_button =
 	(* HTML validation: button div with proper class structure *)
-	div ~a:[a_class ["btn start-game"]] [txt "Start game"]
+	div ~a:[a_class ["btn start-game"]] [txt "Start"]
 
 let reset_button =
 	(* HTML validation: button div with proper class structure *)
-	div ~a:[a_class ["btn reset-game"]] [txt "Reset game"]
+	div ~a:[a_class ["btn reset-game"]] [txt "Reset"]
 
-let first_input_parent =
+let customization_input_one =
 	(* HTML validation: form inputs with proper types and attributes *)
-	div ~a:[a_class ["input-parent"]] [
+	div ~a:[a_class ["customization-input"]] [
 		txt "Creature's size: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
 			(* HTML validation: Form.input validates input_type and form type *)
@@ -116,9 +116,9 @@ let first_input_parent =
 		] ;
 	]
 
-let second_input_parent =
+let customization_input_two =
 	(* HTML validation: form inputs with proper types and attributes *)
-	div ~a:[a_class ["input-parent"]] [
+	div ~a:[a_class ["customization-input"]] [
 		txt "Starting number of creatures: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
 			(* HTML validation: Form.input validates input_type and form type *)
@@ -131,10 +131,10 @@ let second_input_parent =
 		] ;
 	]
 
-let third_input_parent =
+let customization_input_three =
 	(* HTML validation: form inputs with proper types and attributes *)
 	let buttons = div ~a:[a_class ["button-container"]] [start_button; reset_button] in
-	div ~a:[a_class ["input-parent"]] [
+	div ~a:[a_class ["customization-input"]] [
 		txt "Sickness time: ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "thd-parent"] [
 			(* HTML validation: Form.input validates input_type and form type *)
@@ -145,10 +145,10 @@ let third_input_parent =
 
 let form = 
 	(* HTML validation: form container with proper nested structure *)
-	div ~a:[a_class ["all-input-parent"]] [
-		first_input_parent ;
-		second_input_parent ;
-		third_input_parent
+	div ~a:[a_class ["all-customization-input"]] [
+		customization_input_one ;
+		customization_input_two ;
+		customization_input_three
 	]
 
 let agenda_container =
@@ -194,11 +194,10 @@ let footer =
 				~meth:(Eliom_service.Get Eliom_parameter.(suffix (all_suffix "suff")))
 				())
 			[txt "Stanislav Krivtsoff"] [""];
-		txt "."
+		txt " for educational purpose";
 	]
 
 let body_html =
-	(* HTML validation: body element with proper heading hierarchy *)
 	(body [
 		h1 [txt "OCreet GAME"] ;
 		main_content;
