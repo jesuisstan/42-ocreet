@@ -1,50 +1,62 @@
-# Use an official OCaml runtime as a parent image
-FROM ocaml/opam:ubuntu-22.04-ocaml-4.14
+# Use Ubuntu 24.04 as base image
+FROM ubuntu:24.04
 
-# Set the working directory in the container
-WORKDIR /home/opam/app
+# Set the working directory
+WORKDIR /app
 
-# Install system dependencies needed for ocaml packages
-# libev-dev is required by lwt
-RUN sudo apt-get update && sudo apt-get install -y libev-dev && sudo rm -rf /var/lib/apt/lists/*
+# Set environment variables to avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+ENV OPAMYES=1
 
-# Install OCaml dependencies
-# Using one command for all dependencies for better layer caching
-RUN opam install --yes \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libev-dev \
+    pkg-config \
+    libgmp-dev \
+    libssl-dev \
+    zlib1g-dev \
+    rlwrap \
+    bubblewrap \
+    m4 \
+    libsqlite3-dev \
+    curl \
+    expect \
+    unzip \
+    git \
+    rsync \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install OPAM non-interactively
+RUN printf "\n" | bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
+
+# Initialize OPAM
+RUN opam init --yes --disable-sandboxing
+
+# Create OCaml switch
+RUN opam switch create ocreet-4.14.1 4.14.1
+
+# Activate OPAM environment and install packages
+RUN eval $(opam env) && \
+    opam install -y \
+    dune \
     eliom \
-    lwt_ppx \
+    ocsigenserver \
+    js_of_ocaml \
     js_of_ocaml-ppx \
-    ppx_deriving \
-    ppx_deriving_yojson \
-    yojson \
-    calendar \
-    bigstringaf
+    tyxml \
+    lwt \
+    ocamlfind \
+    utop
 
-# Copy the local repository files to the container
-COPY . .
+# Copy project files
+COPY --chown=root:root . .
 
-# Build the application
-# This command is from scripts/build.sh
-RUN opam exec -- ocamlbuild -use-ocamlfind \
-      -pkg eliom \
-      -pkg lwt_ppx \
-      -pkg js_of_ocaml-ppx \
-      -pkg ppx_deriving.std \
-      -pkg yojson \
-      -pkg calendar \
-      -pkg ppx_deriving_yojson \
-      -pkg bigstringaf \
-      src/app/h42n42.byte
+# Make scripts executable
+RUN chmod +x scripts/*.sh
 
-# Vercel will automatically map the container's exposed port.
-# The port is 8080 as seen in src/app/h42n42.conf.in
+# Expose port
 EXPOSE 8080
 
-# Command to run the application
-# This is from scripts/run.sh
-CMD sh -c 'STATIC_DIR=$(ocamlfind query eliom)/static && \
-           LIB_DIR=$(ocamlfind query eliom)/lib && \
-           sed -e "s|@ELIOM_STATIC_DIR@|$STATIC_DIR|g" \
-               -e "s|@ELIOM_LIB_DIR@|$LIB_DIR|g" \
-               src/app/h42n42.conf.in > h42n42.conf && \
-           _build/src/app/h42n42.byte -c h42n42.conf' 
+# Set up environment and run dev script
+CMD ["/bin/bash", "-c", "eval $(opam env) && ./scripts/dev.sh"] 

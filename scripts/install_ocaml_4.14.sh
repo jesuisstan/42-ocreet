@@ -2,6 +2,20 @@
 
 set -e
 
+echo "📦 Updating package lists and installing system dependencies..."
+sudo apt-get update
+sudo apt-get install -y \
+    build-essential \
+    libev-dev \
+    pkg-config \
+    libgmp-dev \
+    libssl-dev \
+    zlib1g-dev \
+    rlwrap \
+    bubblewrap \
+    m4 \
+    libsqlite3-dev
+
 echo "🚀 Installing OPAM (official installer)..."
 bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
 
