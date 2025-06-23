@@ -176,11 +176,33 @@ let main_content =
 		board_container
 	]
 
+let footer =
+	div ~a:[a_class ["footer"]] [
+		txt "This ";
+		a
+			~service:(Eliom_service.extern
+				~prefix:"https://github.com"
+				~path:["jesuisstan"; "42-ocreet"]
+				~meth:(Eliom_service.Get Eliom_parameter.(suffix (all_suffix "suff")))
+				())
+			[txt "application"] [""];
+		txt " was made by ";
+		a
+			~service:(Eliom_service.extern
+				~prefix:"https://www.krivtsoff.site"
+				~path:[]  (* Корень сайта *)
+				~meth:(Eliom_service.Get Eliom_parameter.(suffix (all_suffix "suff")))
+				())
+			[txt "Stanislav Krivtsoff"] [""];
+		txt "."
+	]
+
 let body_html =
 	(* HTML validation: body element with proper heading hierarchy *)
 	(body [
 		h1 [txt "OCreet GAME"] ;
-		main_content
+		main_content;
+		footer
 	])
 
 let make () =
