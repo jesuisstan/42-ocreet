@@ -1,117 +1,187 @@
 # H42N42 Build Scripts
 
-Скрипты для сборки и запуска игры H42N42 (OCaml + Eliom + Js_of_ocaml).
+Scripts for building and running the H42N42 game (OCaml + Eliom + Js_of_ocaml).
 
-## Требования
+## Requirements
 
-Убедитесь, что у вас установлены:
+Make sure you have installed:
 
-- OCaml
+- OCaml 4.14.1
 - Eliom
 - Js_of_ocaml
 - Ocsigen server
 
 ```bash
-# Проверка установленных пакетов
+# Check installed packages
 ocamlfind list | grep -E "(lwt|js_of_ocaml|eliom)"
 ```
 
-## Скрипты
+## Scripts
 
-### 🔨 `build.sh` - Сборка проекта
+### 🐳 `install_ocaml_4.14.sh` - Install OCaml 4.14.1 Environment
 
-Компилирует проект и создает все необходимые файлы.
+Installs the complete OCaml environment with the correct version for the project.
+
+```bash
+chmod +x ./scripts/install_ocaml_4.14.sh
+./scripts/install_ocaml_4.14.sh
+```
+
+**What it does:**
+
+- Updates package lists and installs system dependencies
+- Installs OPAM (OCaml Package Manager)
+- Creates OCaml 4.14.1 switch for the project
+- Installs all required OCaml packages (eliom, ocsigenserver, js_of_ocaml, etc.)
+
+### 🔨 `build.sh` - Build Project
+
+Compiles the project and creates all necessary files.
 
 ```bash
 ./scripts/build.sh
 ```
 
-**Что делает:**
+**What it does:**
 
-- Очищает предыдущую сборку
-- Копирует статические файлы (CSS, JS, изображения)
-- Генерирует зависимости
-- Компилирует серверную часть (OCaml → .cma)
-- Компилирует клиентскую часть (OCaml → JavaScript)
-- Создает конфигурационный файл
+- Cleans previous build
+- Copies static files (CSS, JS, images)
+- Generates dependencies
+- Compiles server-side (OCaml → .cma)
+- Compiles client-side (OCaml → JavaScript)
+- Creates configuration file
 
-### 🚀 `run.sh` - Запуск сервера
+### 🚀 `run.sh` - Start Server
 
-Запускает Ocsigen сервер с игрой.
+Starts the Ocsigen server with the game.
 
 ```bash
 ./scripts/run.sh
 ```
 
-**Открыть в браузере:** http://localhost:8080
+**Open in browser:** http://localhost:8080
 
-### 🧹 `clean.sh` - Очистка
+### 🧹 `clean.sh` - Clean Build
 
-Удаляет все файлы сборки и временные файлы.
+Removes all build files and temporary files.
 
 ```bash
 ./scripts/clean.sh
 ```
 
-### 🔄 `dev.sh` - Разработка
+### 🔄 `dev.sh` - Development Mode
 
-Сборка + запуск одной командой (удобно для разработки).
+Build + run in one command (convenient for development).
 
 ```bash
 ./scripts/dev.sh
 ```
 
-## Структура проекта после сборки
+### 🗑️ `uninstall_ocaml.sh` - Uninstall OCaml
+
+Removes the OCaml environment and all installed packages.
+
+```bash
+./scripts/uninstall_ocaml.sh
+```
+
+**Use with caution:** This will completely remove the OCaml installation.
+
+## Project Structure After Build
 
 ```
 42-ocreet/src/app/
-├── *.eliom              # Исходный код OCaml
-├── h42n42.conf.in       # Шаблон конфигурации
-├── h42n42.conf          # Сгенерированная конфигурация
-├── h42n42.cma           # Скомпилированная серверная библиотека
-├── static/              # Статические файлы
-│   ├── css/            # CSS стили
-│   ├── js/             # JavaScript библиотеки
-│   ├── images/         # Изображения игры
-│   └── h42n42.js       # Сгенерированный JavaScript
-├── _server/            # Промежуточные файлы сервера
-├── _client/            # Промежуточные файлы клиента
-└── _deps/              # Файлы зависимостей
+├── *.eliom              # OCaml source code
+├── h42n42.conf.in       # Configuration template
+├── h42n42.conf          # Generated configuration
+├── h42n42.cma           # Compiled server library
+├── static/              # Static files
+│   ├── css/            # CSS styles
+│   ├── js/             # JavaScript libraries
+│   ├── images/         # Game images
+│   └── h42n42.js       # Generated JavaScript
+├── _server/            # Server intermediate files
+├── _client/            # Client intermediate files
+└── _deps/              # Dependency files
 ```
 
-## Решение проблем
+## Quick Start
 
-### Ошибка "Port 8080 is already in use"
+### First Time Setup
 
 ```bash
-# Найти процесс, использующий порт
+# Install OCaml 4.14.1 environment
+./scripts/install_ocaml_4.14.sh
+
+# Switch to the correct OCaml version
+opam switch ocreet-4.14.1
+eval $(opam env)
+```
+
+### Development Workflow
+
+```bash
+# Build and run in one command
+./scripts/dev.sh
+```
+
+### Manual Build and Run
+
+```bash
+# Build the project
+./scripts/build.sh
+
+# Start the server
+./scripts/run.sh
+```
+
+## Troubleshooting
+
+### Error "Port 8080 is already in use"
+
+```bash
+# Find process using the port
 lsof -i :8080
-# Убить процесс
+# Kill the process
 kill -9 <PID>
 ```
 
-### Ошибка "No such package"
+### Error "No such package"
 
-Проверьте установленные пакеты OCaml:
+Check installed OCaml packages:
 
 ```bash
 ocamlfind list | grep -E "(lwt|js_of_ocaml|eliom)"
 ```
 
-### Проблемы с правами доступа
+### Permission Issues
 
 ```bash
 chmod +x scripts/*.sh
 ```
 
-# Сборка проекта
+### Wrong OCaml Version
 
-./scripts/build.sh
+```bash
+# Check current version
+ocaml --version
 
-# Запуск сервера
+# Switch to correct version
+opam switch ocreet-4.14.1
+eval $(opam env)
+```
 
-./scripts/run.sh
+## Game Features
 
-# Или всё сразу (для разработки)
+- **Random creature movement** with realistic bouncing
+- **Toxic river** that infects creatures on contact
+- **Hospital** where players can heal sick creatures
+- **Drag and drop** mechanics with mouse
+- **Infection mechanics** with different states (Berserk, Insane)
+- **Difficulty progression** over time
+- **Configurable parameters** via sliders
+- **Quadtree optimization** for collision detection
 
-./scripts/dev.sh
+## Access the Game
+
+After running the server, open your browser and go to: **http://localhost:8080**

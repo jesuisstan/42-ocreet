@@ -15,10 +15,10 @@ In this browser game, you help a population of creatures (_Creets_) survive a de
 - Infected Creets:
   - Change color and move slower (15% speed reduction)
   - Can infect others with 2% chance on contact
-  - Die after 7 seconds if not healed
+  - Die after configurable time if not healed
 - Special infected states:
   - **Berserk** (10% chance): Grow 4x larger, more dangerous
-  - **Mean** (10% chance): Shrink 15%, chase healthy Creets
+  - **Insane** (10% chance): Shrink 15%, chase healthy Creets
 - Player controls:
   - **Drag and drop** Creets with mouse to keep them safe
   - Grabbed Creets are temporarily **invulnerable**
@@ -27,6 +27,7 @@ In this browser game, you help a population of creatures (_Creets_) survive a de
   - Creets reproduce as long as healthy ones exist
   - **Difficulty increases** over time (speed, spawn rate)
   - **Game Over** when all Creets are infected
+  - **Configurable parameters** via sliders (creature size, speed, spawn rate, etc.)
 
 ---
 
@@ -39,6 +40,7 @@ In this browser game, you help a population of creatures (_Creets_) survive a de
   - [`Lwt`](https://ocsigen.org/lwt/) – Monadic concurrency library
 - **TyXML** – Type-safe HTML generation
 - **Quadtree optimization** for collision detection (bonus feature)
+- **Materialize CSS** – Modern UI framework
 
 ---
 
@@ -79,7 +81,16 @@ chmod +x ./scripts/install_ocaml_4.14.sh
 
 _You may be prompted for your `sudo` password to install system packages._
 
-### 2. Build and Run the Project
+### 2. Switch to Correct OCaml Version
+
+After installation, switch to the project's OCaml environment:
+
+```bash
+opam switch ocreet-4.14.1
+eval $(opam env)
+```
+
+### 3. Build and Run the Project
 
 This command compiles the source code and starts the development server.
 
@@ -124,6 +135,12 @@ sudo docker system prune -a
 
 # Rebuild after changes
 ./scripts/clean.sh && ./scripts/build.sh
+
+# Only build (without running)
+./scripts/build.sh
+
+# Only run (if already built)
+./scripts/run.sh
 ```
 
 ---
@@ -134,22 +151,46 @@ sudo docker system prune -a
 42-ocreet/
 ├── src/
 │   ├── app/                   # OCaml source files
-│   │   ├── h42n42.eliom       # Main application entry
+│   │   ├── h42n42.eliom       # Main application entry & game logic
 │   │   ├── creature.eliom     # Creet logic & behavior
+│   │   ├── creatureType.eliom # Type definitions
+│   │   ├── creatureUtils.eliom # Creature utility functions
 │   │   ├── page.eliom         # UI and DOM generation
-│   │   ├── dragging.eliom     # Mouse interaction
-│   │   ├── quadtree.eliom     # Collision optimization
-│   │   └── ...
+│   │   ├── dragging.eliom     # Mouse interaction & drag/drop
+│   │   ├── quadtree.eliom     # Collision detection optimization
+│   │   ├── mainUtils.eliom    # Main utility functions
+│   │   ├── config.eliom       # Configuration management
+│   │   ├── utils.eliom        # General utilities
+│   │   └── h42n42.conf.in     # Server configuration template
 │   ├── css/                   # Stylesheets
-│   ├── js/                    # External JavaScript libs
-│   ├── images/                # Game graphics
-│   └── static/                # Static assets
+│   │   ├── h42n42.css         # Main game styles
+│   │   └── materialize.min.css # Materialize CSS framework
+│   ├── js/                    # External JavaScript libraries
+│   │   ├── jquery.min.js      # jQuery library
+│   │   ├── materialize.min.js # Materialize JS
+│   │   └── utils.js           # Custom JavaScript utilities
+│   └── images/                # Game graphics
+│       ├── creature_healthy.png
+│       ├── creature_sick.png
+│       ├── creature_berserk.png
+│       ├── creature_insane.png
+│       ├── hospital.png
+│       ├── river.png
+│       └── sun-moon.svg
 ├── scripts/                   # Build & run scripts
-│   ├── setup.sh              # One-command setup
+│   ├── install_ocaml_4.14.sh  # OCaml environment setup
 │   ├── build.sh              # Compile project
 │   ├── run.sh                # Start server
-│   └── clean.sh              # Clean build files
-└── README.md
+│   ├── dev.sh                # Build and run in one command
+│   ├── clean.sh              # Clean build files
+│   ├── uninstall_ocaml.sh    # Remove OCaml environment
+│   └── README.md             # Scripts documentation
+├── docs/                     # Project documentation
+│   └── subject.txt           # Original project requirements
+├── Dockerfile                # Docker configuration
+├── .dockerignore            # Docker ignore rules
+├── .gitignore               # Git ignore rules
+└── README.md                # This file
 ```
 
 ---
@@ -160,10 +201,41 @@ This project demonstrates:
 
 1. **Client-side OCaml**: Run OCaml code in the browser via Js_of_ocaml
 2. **Type-safe web development**: Shared types between client & server
-3. **Monadic concurrency**: Lwt for asynchronous programming
+3. **Monadic concurrency**: Lwt for asynchronous programming with cooperative threads
 4. **DOM manipulation**: Direct browser interaction from OCaml
 5. **Event handling**: Mouse events with Lwt_js_events
 6. **Game development**: Real-time simulation with collision detection
+7. **Static HTML validation**: Type-safe HTML generation with TyXML
+8. **Performance optimization**: Quadtree for efficient collision detection
+
+---
+
+## 🎯 Key Features
+
+### Mandatory Requirements ✅
+
+- [x] Random creature movement with realistic bouncing
+- [x] Toxic river that infects creatures on contact
+- [x] Hospital for healing sick creatures
+- [x] Drag and drop mechanics with mouse
+- [x] Invulnerability while being dragged
+- [x] 15% speed reduction for infected creatures
+- [x] 2% infection chance on contact
+- [x] Berserk state (10% chance, 4x size increase)
+- [x] Insane state (10% chance, 15% size reduction, chases healthy creatures)
+- [x] Difficulty progression over time
+- [x] Game over when all creatures are infected
+- [x] Lwt threads for each creature
+- [x] DOM elements for creatures
+- [x] Mouse event handling
+
+### Bonus Features ✅
+
+- [x] **Quadtree optimization** for collision detection
+- [x] **Configurable parameters** via sliders
+- [x] **Modern UI** with Materialize CSS
+- [x] **Theme toggle** (light/dark mode)
+- [x] **Responsive design** for different screen sizes
 
 ---
 
@@ -171,18 +243,42 @@ This project demonstrates:
 
 **Build errors?**
 
-- Make sure all OCaml packages are installed: `opam list | grep -E "(eliom|js_of_ocaml|lwt)"`
+- Make sure you're using OCaml 4.14.1: `ocaml --version`
+- Switch to correct environment: `opam switch ocreet-4.14.1 && eval $(opam env)`
+- Check installed packages: `opam list | grep -E "(eliom|js_of_ocaml|lwt)"`
 - Try cleaning first: `./scripts/clean.sh`
 
 **Server won't start?**
 
 - Check port 8080 is free: `lsof -i :8080`
-- Verify build completed: look for `src/app/local/var/www/ocreet/eliom/ocreet.js`
+- Verify build completed: look for `src/app/h42n42.cma` and `src/app/static/h42n42.js`
+- Check server logs for errors
 
 **Game not loading?**
 
 - Check browser console for JavaScript errors
-- Ensure ocsigenserver is running: should see "Starting Ocsigen server" message
+- Ensure ocsigenserver is running: should see "Starting H42N42 server" message
+- Verify all static files are copied: check `src/app/static/` directory
+
+**Wrong OCaml version?**
+
+```bash
+# Check current version
+ocaml --version
+
+# Switch to correct version
+opam switch ocreet-4.14.1
+eval $(opam env)
+```
+
+---
+
+## 📚 Additional Resources
+
+- [Ocsigen Documentation](https://ocsigen.org)
+- [Eliom Tutorial](https://ocsigen.org/eliom/1.12.0/manual/intro)
+- [Js_of_ocaml Documentation](https://ocsigen.org/js_of_ocaml/)
+- [Lwt Documentation](https://ocsigen.org/lwt/)
 
 ---
 
