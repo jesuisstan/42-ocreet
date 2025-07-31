@@ -35,12 +35,11 @@ In this browser game, you help a population of creatures (_Creets_) survive a de
 
 - **OCaml 4.14.1**
 - [Ocsigen](https://ocsigen.org) – Full-stack framework for typed web applications
-  - [`Eliom`](https://ocsigen.org/eliom/) – Client/server web framework
+  - [`Eliom`](https://ocsigen.org/eliom/) – Library for client/server web applications with **TyXML** for type-safe HTML generation
   - [`Js_of_ocaml`](https://ocsigen.org/js_of_ocaml/) – OCaml to JavaScript compiler
   - [`Lwt`](https://ocsigen.org/lwt/) – Monadic concurrency library
-- **TyXML** – Type-safe HTML generation
 - **Quadtree optimization** for collision detection (bonus feature)
-- **Materialize CSS** – Lightweight UI framework
+- **Materialize CSS** – Modern UI framework
 
 ---
 
@@ -155,7 +154,7 @@ sudo docker system prune -a
 │   │   ├── creature.eliom     # Creet logic & behavior
 │   │   ├── creatureType.eliom # Type definitions
 │   │   ├── creatureUtils.eliom # Creature utility functions
-│   │   ├── page.eliom         # UI and DOM generation
+│   │   ├── page.eliom         # UI and DOM generation (using TyXML)
 │   │   ├── dragging.eliom     # Mouse interaction & drag/drop
 │   │   ├── quadtree.eliom     # Collision detection optimization
 │   │   ├── mainUtils.eliom    # Main utility functions
@@ -200,12 +199,12 @@ sudo docker system prune -a
 This project demonstrates:
 
 1. **Client-side OCaml**: Run OCaml code in the browser via Js_of_ocaml
-2. **Type-safe web development**: Shared types between client & server
+2. **Type-safe web development**: Shared types between client & server using Eliom
 3. **Monadic concurrency**: Lwt for asynchronous programming with cooperative threads
 4. **DOM manipulation**: Direct browser interaction from OCaml
 5. **Event handling**: Mouse events with Lwt_js_events
 6. **Game development**: Real-time simulation with collision detection
-7. **Static HTML validation**: Type-safe HTML generation with TyXML
+7. **Static HTML validation**: Type-safe HTML generation with TyXML (included in Eliom)
 8. **Performance optimization**: Quadtree for efficient collision detection
 
 ---
