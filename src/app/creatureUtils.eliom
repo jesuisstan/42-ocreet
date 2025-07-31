@@ -15,19 +15,10 @@ let update_rotation creature new_rot =
 	let style = Js.Unsafe.get creature.dom_elt (Js.string "style") in
 	Js.Unsafe.set style (Js.string "transform") (Js.string rotation)
 
-let get_elt_coords elt =
-	let coords = Js.Unsafe.meth_call elt "getBoundingClientRect" [||] in
-	(Js.Unsafe.get coords (Js.string "left"), Js.Unsafe.get coords (Js.string "top"))
-
 let get_creature_size creature =
 	creature.size
 
 let get_creature_relative_coords x y =
-	(* Since creatures are now positioned relative to container, 
-	   we can use the coordinates directly *)
-	(x, y)
-
-let get_creature_absolute_coords x y =
 	(* Since creatures are now positioned relative to container, 
 	   we can use the coordinates directly *)
 	(x, y)

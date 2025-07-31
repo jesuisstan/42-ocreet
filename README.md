@@ -40,7 +40,7 @@ In this browser game, you help a population of creatures (_Creets_) survive a de
   - [`Lwt`](https://ocsigen.org/lwt/) – Monadic concurrency library
 - **TyXML** – Type-safe HTML generation
 - **Quadtree optimization** for collision detection (bonus feature)
-- **Materialize CSS** – Modern UI framework
+- **Materialize CSS** – Lightweight UI framework
 
 ---
 
