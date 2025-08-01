@@ -23,7 +23,7 @@ echo "📥 Initializing OPAM..."
 opam init -y --disable-sandboxing
 eval $(opam env)
 
-# Определяем файл конфигурации shell для автоподгрузки opam env
+# Define shell config for auto-loading OPAM env
 SHELL_CONFIG=""
 
 if [[ "$SHELL" == */zsh ]]; then
@@ -46,11 +46,19 @@ echo "🐫 Creating OCaml 4.14.1 switch for the Ocreet project..."
 opam switch create ocreet-4.14.1 4.14.1
 eval $(opam env --switch=ocreet-4.14.1)
 
-echo "📦 Installing system dependencies for Ocsigen/Js_of_ocaml..."
-sudo apt install -y rlwrap bubblewrap m4 pkg-config libev-dev libssl-dev libsqlite3-dev
-
 echo "🔧 Installing OCaml packages for the Ocreet project..."
-opam install -y dune eliom ocsigenserver js_of_ocaml js_of_ocaml-ppx tyxml lwt ocamlfind utop
+opam install -y \
+  dune \
+  eliom \
+  ocsigenserver \
+  js_of_ocaml \
+  js_of_ocaml-ppx \
+  tyxml \
+  lwt \
+  ocamlfind \
+  utop \
+  ocsipersist \
+  ocsipersist-dbm
 
 echo "✅ Ocreet environment is fully installed!"
 echo "💡 You can activate it anytime with:"
@@ -60,3 +68,4 @@ echo "🔍 Verify versions:"
 ocaml -version
 utop --version
 eliomc --version || echo "ℹ️ eliomc installed via eliom package"
+
