@@ -3,8 +3,7 @@
 **42-ocreet** is an interactive web simulation written entirely in **OCaml** using the **Ocsigen** framework.  
 In this browser game, you help a population of creatures (_Creets_) survive a deadly virus spreading from a toxic river.
 
-Available on [www.four2-ocreet.onrender.com]([https://ocsigen.org](https://four2-ocreet.onrender.com/)).
-
+Available on [www.four2-ocreet.onrender.com](https://four2-ocreet.onrender.com/) 
 **Note**: wait ~2 minutes before the game compiles and gets ready for playing
 
 > A 42 School project exploring client-side web programming with static typing, monadic concurrency, and DOM interaction in OCaml.
