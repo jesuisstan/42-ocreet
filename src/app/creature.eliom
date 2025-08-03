@@ -58,6 +58,10 @@ let update_speed creature =
 		| Insane -> 1.15 (* A 'mean' Creet runs 15% faster to contaminate others. *)
 	in
 	(* Because of the panic, Creets accelerate in time so the difficulty level increases. *)
+	(* Each creature's speed increases based on its individual creation time *)
+	(* time_speedup calculation: speed increases continuously by 0.833% per second (1/120) *)
+	(* Formula: time_speedup = 1.0 + (elapsed_time / 120.0) *)
+	(* Examples: 30s = 1.25x, 60s = 1.5x, 90s = 1.75x, 120s = 2.0x, 240s = 3.0x *)
 	let time_speedup = (Utils.get_time () -. creature.start_time) /. 120.0 in
 	let time_speedup = 1.0 +. time_speedup in
 	creature.speed <- float_of_int (Config.get_val "creature-speed") *. time_speedup *. multiplier 
@@ -126,13 +130,15 @@ let rec creature_thread creature =
 	| Some time when Utils.get_time () -. time >= living_time_after_infection ->
 			kill_creature creature
 	| _ -> (
+		(* Main creature update loop - runs every 0.01 seconds (100 times per second) *)
+		(* Asynchronous sleep to avoid blocking the main thread. 100 times per second. >>= (bind) as "async" in Javascript) *)
 		Js_of_ocaml_lwt.Lwt_js.sleep 0.01 >>= fun () ->
 			match creature.currently_dragged with
 			| true -> ( creature.updated_at <- Some (Utils.get_time ()) ;
 						creature_thread creature )
 			| false -> (
 				change_rotation_if_ok creature ;
-				update_speed creature ;
+				update_speed creature ;  (* Update speed every 0.01s for continuous difficulty progression *)
 				update_size creature ;  (* Update size every 0.01s for accurate collision detection *)
 				let x, y = next_coords creature in
 				CreatureUtils.move_creature_bounce creature x y ;
