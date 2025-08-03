@@ -9,10 +9,9 @@
 }
 
 body {
-  background-color: #f6f8fa;
-  color: #25292e;
-  font-size: 16px;
-  line-height: 1.6;
+  background: var(--bg);
+  color: var(--fg);
+  padding-bottom: 40px; /* Add padding to prevent overlap with fixed footer */
 }
 
 @keyframes fadein {
@@ -191,35 +190,86 @@ span.value {
   .board-container {
     transform: scale(0.9);
   }
+
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 20px;
+  }
+
+  .agenda-container {
+    align-items: center;
+    min-width: auto;
+    max-width: 600px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .agenda {
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-top: 15px;
+  }
+
+  body {
+    padding-bottom: 35px; /* Slightly less padding on smaller screens */
+  }
 }
 
 @media (max-width: 1000px) {
   .board-container {
-    transform: scale(0.8);
+    transform: scale(0.85);
+  }
+
+  body {
+    padding-bottom: 38px;
   }
 }
 
 @media (max-width: 900px) {
   .board-container {
-    transform: scale(0.7);
+    transform: scale(0.8);
+  }
+
+  body {
+    padding-bottom: 36px;
   }
 }
 
 @media (max-width: 800px) {
   .board-container {
-    transform: scale(0.6);
+    transform: scale(0.75);
+  }
+
+  body {
+    padding-bottom: 34px;
   }
 }
 
 @media (max-width: 700px) {
   .board-container {
-    transform: scale(0.5);
+    transform: scale(0.7);
+  }
+
+  body {
+    padding-bottom: 32px;
   }
 }
 
 @media (max-width: 600px) {
   .board-container {
-    transform: scale(0.4);
+    transform: scale(0.7);
+  }
+
+  body {
+    padding-bottom: 30px; /* Even less padding on mobile */
   }
 }
 
@@ -256,6 +306,12 @@ span.value {
   .main-content {
     flex-direction: column;
     align-items: center;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding-bottom: 30px; /* Even less padding on mobile */
   }
 }
 

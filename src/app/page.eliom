@@ -190,7 +190,7 @@ let footer =
 		a
 			~service:(Eliom_service.extern
 				~prefix:"https://www.krivtsoff.site"
-				~path:[]  (* Корень сайта *)
+				~path:[]
 				~meth:(Eliom_service.Get Eliom_parameter.(suffix (all_suffix "suff")))
 				())
 			[txt "Stanislav Krivtsoff"] [""];
