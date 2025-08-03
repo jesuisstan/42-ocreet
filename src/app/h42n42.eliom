@@ -144,7 +144,7 @@ and init_client restart =
 		let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
 		let ranges = Js.Unsafe.meth_call body "querySelectorAll" [| Js.Unsafe.inject (Js.string "span.rangeparent") |] in
 		List.iter MainUtils.replace_range_tagname (Dom.list_of_nodeList ranges) ;
-		(* Сall setVals() again to show value indicators immediately after page load	*)
+		(* Call setVals() again to show value indicators immediately after page load	*)
 		ignore (Js.Unsafe.eval_string "setVals();");
 		
 		(* Initialize start button *)

@@ -145,6 +145,40 @@ let handle_creature_dragend creature =
 	CreatureUtils.update_rotation creature (Utils.random_rotation ()) ;
 	creature.change_rotation_at <- Utils.random_forward_time ()
 
+(* Function to generate safe coordinates outside the infected river zone *)
+let generate_safe_coordinates () =
+	let max_attempts = 100 in
+	let creature_size = float_of_int (Config.get_val "creature-size") in
+	let rec try_coordinates attempts =
+		if attempts >= max_attempts then (
+			(* If we couldn't find a safe place, use the center of the field *)
+			let center_x = float_of_int Config.board_width /. 2.0 in
+			let center_y = float_of_int Config.board_height /. 2.0 in
+			(center_x, center_y)
+		) else (
+			let rand_x = Random.float (float_of_int Config.board_width) in
+			let rand_y = Random.float (float_of_int Config.board_height) in
+			
+			(* Check that coordinates are not in the infected river zone *)
+			(* Consider creature size - it shouldn't partially enter the infected zone *)
+			let river_zone_y = float_of_int Config.extremes_height in
+			let safe_y_min = river_zone_y +. creature_size in
+			
+			(* Check field boundaries - creature shouldn't spawn too close to edges *)
+			let margin = creature_size *. 0.5 in
+			let safe_x_min = margin in
+			let safe_x_max = float_of_int Config.board_width -. margin in
+			let safe_y_max = float_of_int Config.board_height -. margin in
+			
+			if rand_y >= safe_y_min && rand_y <= safe_y_max && 
+			   rand_x >= safe_x_min && rand_x <= safe_x_max then
+				(rand_x, rand_y)
+			else
+				try_coordinates (attempts + 1)
+		)
+	in
+	try_coordinates 0
+
 let make_creature ?fadein:(fadein=false) start_time dragging_handler =
 	let image = img
 		~alt:""
@@ -172,10 +206,10 @@ let make_creature ?fadein:(fadein=false) start_time dragging_handler =
 		full_size_at = None ;
 		currently_dragged = false
 	} in
-	let rand_x = Random.float (float_of_int Config.board_width) in
-	let rand_y = Random.float (float_of_int Config.board_height) in
+	(* Use safe coordinates instead of random ones *)
+	let safe_x, safe_y = generate_safe_coordinates () in
 	CreatureUtils.update_rotation creature (Utils.random_rotation ()) ;
-	CreatureUtils.move_creature creature rand_x rand_y ;
+	CreatureUtils.move_creature creature safe_x safe_y ;
 	Dragging.make_draggable dragging_handler creature ;
 	creature
 
