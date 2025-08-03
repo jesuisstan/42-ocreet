@@ -56,7 +56,8 @@ and collisions_and_chasing_thread () =
 		collisions_and_chasing_thread ()
 
 and make_creatures_loop start nb attach_n_creatures =
-	let at_least_one_healthy = List.exists (fun b -> b.state = StdSick false) game.creatures in
+	let living_creatures = List.filter (fun b -> not b.dead) game.creatures in
+	let at_least_one_healthy = List.exists (fun b -> b.state = StdSick false) living_creatures in
 	let nb = if start || at_least_one_healthy then nb else 0 in
 	let new_creatures = attach_n_creatures (not start) nb in
 	game.creatures <- List.fold_left (fun acc b -> b::acc) game.creatures new_creatures;
