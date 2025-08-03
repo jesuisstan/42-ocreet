@@ -15,6 +15,8 @@ let update_rotation creature new_rot =
 	let style = Js.Unsafe.get creature.dom_elt (Js.string "style") in
 	Js.Unsafe.set style (Js.string "transform") (Js.string rotation)
 
+(* Get current creature size - used for collision detection and boundary calculations *)
+(* Critical for Berserk creatures whose size changes dynamically *)
 let get_creature_size creature =
 	creature.size
 

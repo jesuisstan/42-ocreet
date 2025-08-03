@@ -75,6 +75,8 @@ module Make : MakeSig =
 				}
 
 			(* Get object bounding box coordinates *)
+			(* Uses current creature size for accurate collision detection *)
+			(* Essential for Berserk creatures whose size changes dynamically *)
 			let get_leaf_coords leaf =
 				let leaf_width, leaf_height = Leaftype.get_size leaf.t in
 				let leaf_max_x, leaf_max_y = leaf.x +. leaf_width, leaf.y +. leaf_height in
@@ -162,16 +164,18 @@ module Make : MakeSig =
 					)
 
 			(* Public interface: check for collisions with given predicate *)
+			(* Uses real-time creature sizes for accurate collision detection *)
 			let collision_pred tree leaf pred =
 				(* Real collision detection using bounding box intersection *)
+				(* Accounts for dynamic size changes (especially Berserk creatures) *)
 				let _real_collide l1 l2 =
 					let l1_x, l1_y = Leaftype.get_coords l1 in
-					let l1_width, l1_height = Leaftype.get_size l1 in
+					let l1_width, l1_height = Leaftype.get_size l1 in  (* Current size of creature 1 *)
 					let l1_max_x, l1_max_y = l1_x +. l1_width, l1_y +. l1_height in
 					let l2_x, l2_y = Leaftype.get_coords l2 in
-					let l2_width, l2_height = Leaftype.get_size l2 in
+					let l2_width, l2_height = Leaftype.get_size l2 in  (* Current size of creature 2 *)
 					let l2_max_x, l2_max_y = l2_x +. l2_width, l2_y +. l2_height in
-					(* Check if rectangles overlap *)
+					(* Check if rectangles overlap - accounts for all size changes *)
 					if (l1_x <= l2_max_x && l2_x <= l1_max_x
 						&& l1_y <= l2_max_y && l2_y <= l1_max_y) then true
 					else false

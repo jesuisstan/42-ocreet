@@ -111,11 +111,13 @@ let change_insane_rotation creature existing_creatures =
 	)
 
 (* Optimized collision detection using quadtree spatial partitioning *)
+(* A contaminated Creet that touches a healthy Creet has a 2% risk of contaminating it at each iteration *)
+(* Collision detection accounts for dynamic creature sizes (especially Berserk creatures) *)
 let make_sick_if_collision quadtree creature =
 	let other_creature_sick = (fun x _ -> not x.currently_dragged && Creature.is_sick x) in
 	if not (Creature.is_sick creature) && not creature.currently_dragged
 		&& CreatureQuadtree.collision_pred quadtree creature other_creature_sick then (
-		match Random.int 10 with
+		match Random.int 50 with  (* 1/50 = 2% chance of contamination *)
 		| 0 -> Creature.make_creature_sick creature
 		| _ -> ()
 	)

@@ -30,6 +30,7 @@ let cure_creature creature =
 	creature.got_infected_at <- None ;
 	creature.full_size_at <- None
 
+(* When a creature gets infected, it has additional risks of special states *)
 let make_creature_sick creature =
 	let n = Random.int 10 in
 	creature.got_infected_at <- Some (Utils.get_time ()) ;
@@ -61,6 +62,8 @@ let update_speed creature =
 	let time_speedup = 1.0 +. time_speedup in
 	creature.speed <- float_of_int (Config.get_val "creature-speed") *. time_speedup *. multiplier 
 
+(* Update creature size - critical for collision detection accuracy *)
+(* Berserk size must be taken into account in the contamination's calculation *)
 let update_size creature =
 	let base_size = float_of_int (Config.get_val "creature-size") in
 	let new_size =
@@ -70,12 +73,13 @@ let update_size creature =
 			base_size *. 0.85
 		| Berserk ->
 			(* When a Creet becomes berserk, its diameter slowly grows until it has quadrupled. *)
+			(* This increased size significantly raises the risk of touching other creatures *)
 			(match creature.full_size_at with
 			| Some full_size_time ->
 				let start_time = full_size_time -. 7.0 in
 				let elapsed_time = Utils.get_time () -. start_time in
 				let progress = min 1.0 (elapsed_time /. 7.0) in
-				let multiplier = 1.0 +. (progress *. 3.0) in
+				let multiplier = 1.0 +. (progress *. 3.0) in  (* 1x to 4x size over 7 seconds *)
 				base_size *. multiplier
 			| None -> creature.size)
 		| _ ->
@@ -129,7 +133,7 @@ let rec creature_thread creature =
 			| false -> (
 				change_rotation_if_ok creature ;
 				update_speed creature ;
-				update_size creature ;
+				update_size creature ;  (* Update size every 0.01s for accurate collision detection *)
 				let x, y = next_coords creature in
 				CreatureUtils.move_creature_bounce creature x y ;
 				make_sick_if_ok creature ;
