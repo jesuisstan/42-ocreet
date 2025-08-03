@@ -49,8 +49,12 @@ and collisions_and_chasing_thread () =
 		let living_creatures = List.filter (fun b -> not b.dead) game.creatures in
 		let width = float_of_int Config.board_width in
 		let height = float_of_int Config.board_height in
+		(* Create quadtree for spatial partitioning optimization *)
+		(* This reduces collision detection from O(n²) to O(log n) *)
 		let quadtree = MainUtils.CreatureQuadtree.make width height in
+		(* Add all living creatures to the quadtree *)
 		let quadtree = List.fold_left (fun acc b -> MainUtils.CreatureQuadtree.add acc b) quadtree living_creatures in
+		(* Check collisions using optimized quadtree instead of brute force *)
 		List.iter (MainUtils.make_sick_if_collision quadtree) living_creatures ;
 		List.iter (fun x -> MainUtils.change_insane_rotation x living_creatures) living_creatures ;
 		collisions_and_chasing_thread ()

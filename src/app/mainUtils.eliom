@@ -9,14 +9,19 @@ open CreatureType
 
 [%%client
 
+open Eliom_content.Html.D
+open Eliom_content.Html
+open Lwt
 open Js_of_ocaml
 
+(* Quadtree implementation for creatures - optimizes collision detection *)
+(* Instead of O(n²) brute force, we get O(log n) performance *)
 module CreatureLeaf : (Quadtree.Leaf with type t = creature) = struct
 	type t = creature
 	let get_coords creature =
-		(creature.x, creature.y)
+		(creature.x, creature.y)  (* Get creature position *)
 	let get_size creature =
-		(creature.size, creature.size)
+		(creature.size, creature.size)  (* Get creature bounding box *)
 end
 module CreatureQuadtree = Quadtree.Make (CreatureLeaf)
 
@@ -105,6 +110,7 @@ let change_insane_rotation creature existing_creatures =
 		)
 	)
 
+(* Optimized collision detection using quadtree spatial partitioning *)
 let make_sick_if_collision quadtree creature =
 	let other_creature_sick = (fun x _ -> not x.currently_dragged && Creature.is_sick x) in
 	if not (Creature.is_sick creature) && not creature.currently_dragged
