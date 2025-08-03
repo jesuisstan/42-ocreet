@@ -30,7 +30,7 @@ Available on [www.four2-ocreet.onrender.com](https://four2-ocreet.onrender.com/)
 - Game mechanics:
   - Creets reproduce as long as healthy ones exist
   - **Difficulty increases** over time (speed, spawn rate)
-  - **Game Over** when all Creets are infected
+  - **Game Over** when all Creets are dead
   - **Configurable parameters** via sliders (creature size, speed, spawn rate, etc.)
 
 ---
