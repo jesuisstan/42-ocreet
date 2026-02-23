@@ -2,9 +2,9 @@ name: Keep 42-OCreet Render Alive
 
 on:
   schedule:
-    # Каждые 8 минут (UTC)
-    - cron: '*/8 * * * *'
-  workflow_dispatch: # Ручной тест
+    # Every 15 minutes (UTC)
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Manual test
 
 jobs:
   ping-42-ocreet:

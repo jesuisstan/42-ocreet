@@ -202,6 +202,13 @@ let () = Eliom_client.onload (fun () -> Lwt.async (fun () -> init_client false))
 
 ]
 
+[%%server
+
+(* Start keep-alive mechanism to prevent Render.com from sleeping *)
+let () = Keepalive.start_keepalive ()
+
+]
+
 module H42n42_app =
 	Eliom_registration.App (
 		struct
