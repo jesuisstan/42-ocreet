@@ -18,10 +18,9 @@ let perform_ping () =
 	(* Ensure URL ends with / for root path *)
 	let url = base_url ^ "/" in
 	try
-		let process = exec ~stdout:`Dev_null ~stderr:`Dev_null
-			("curl", [| "curl"; "-f"; "-s"; "-m"; "10"; url |])
-		in
-		process#status >>= fun _ ->
+		let command = Printf.sprintf "curl -f -s -m 10 %s" (String.escaped url) in
+		let process = open_process (shell command) in
+		process#status >>= fun _status ->
 		Lwt.return_unit
 	with
 	| e ->
