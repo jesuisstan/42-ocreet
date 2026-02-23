@@ -18,7 +18,7 @@ let perform_ping () =
 	(* Ensure URL ends with / for root path *)
 	let url = base_url ^ "/" in
 	try
-		let process = exec ~stdout:`Null ~stderr:`Null
+		let process = exec ~stdout:`Dev_null ~stderr:`Dev_null
 			("curl", [| "curl"; "-f"; "-s"; "-m"; "10"; url |])
 		in
 		process#status >>= fun _ ->
