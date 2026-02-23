@@ -19,8 +19,8 @@ let perform_ping () =
 	let url = base_url ^ "/" in
 	try
 		let command = Printf.sprintf "curl -f -s -m 10 %s" (String.escaped url) in
-		let%lwt process = shell command in
-		let%lwt _ = process#status in
+		shell command >>= fun process ->
+		process#status >>= fun _ ->
 		Lwt.return_unit
 	with
 	| e ->
@@ -29,8 +29,8 @@ let perform_ping () =
 
 (* Recursive function to ping periodically *)
 let rec ping_loop () =
-	let%lwt () = Lwt_unix.sleep ping_interval_seconds in
-	let%lwt () = perform_ping () in
+	Lwt_unix.sleep ping_interval_seconds >>= fun () ->
+	perform_ping () >>= fun () ->
 	ping_loop ()
 
 (* Start the keep-alive mechanism *)
